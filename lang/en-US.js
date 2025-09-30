@@ -3,12 +3,8 @@
  */
 export default {
   // 标题和说明
-  appTitle: 'VENC File Protection',
-  title: 'VENC File Protection',
-  footer: '&copy; {{year}} {{author}}. Powered by <a href="{{teamLink}}" target="_blank" title="{{teamName}}">{{teamName}}</a>',
-  author: 'Github@landeyucc',
-  teamName: 'ColdSea Team',
-  teamLink: 'https://coldsea.vip/',
+  appTitle: 'VENC',
+  title: 'VENC',
   // 语言选择器
   languageSelector: 'Language',
   languageEnglish: 'English',
