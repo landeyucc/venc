@@ -1,6 +1,6 @@
 # VENC文件保护
 ![VENC文件保护](img/venc.ico)
-前往[English Documentation](README.md)
+**前往[English Documentation](README.md)**
 
 一个简洁、高效的浏览器端文件加密保护工具，支持加密和解密各种类型的文件。
 
