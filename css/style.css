@@ -1,0 +1,584 @@
+:root {
+  --bg-main: #e0e5ec;
+  --text-main: #4a4a6a;
+  --primary: #6c63ff;
+  --shadow-dark: rgba(163, 177, 198, 0.6);
+  --shadow-light: rgba(255, 255, 255, 0.8);
+  --radius: 16px;
+  --padding: 24px;
+  --transition: all 0.3s ease;
+} 
+
+/* 深色模式变量 */
+body.dark-theme {
+  --bg-main: #1a1a2e;
+  --text-main: #e0e0e0;
+  --primary: #8a85ff;
+  --shadow-dark: rgba(0, 0, 0, 0.4);
+  --shadow-light: rgba(40, 40, 60, 0.2);
+}
+
+/* 深色模式下的特殊样式 */
+body.dark-theme .switch-btn.active,
+body.dark-theme .decrypt-option-btn.active {
+  background: linear-gradient(145deg, #8a85ff, #6a62e0);
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.3), inset -2px -2px 4px rgba(40, 40, 60, 0.2);
+}
+
+body.dark-theme .btn {
+  background: linear-gradient(145deg, #2a2a4a, #1a1a2e);
+  box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+}
+
+body.dark-theme .input,
+body.dark-theme .file-input {
+  box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+}
+
+body.dark-theme .input:focus {
+  box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light), 0 0 0 2px rgba(138, 133, 255, 0.3);
+}
+
+/* 切换器样式 */
+.mode-switch {
+  display: flex;
+  background-color: var(--bg-main);
+  border-radius: var(--radius);
+  box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+  padding: 4px;
+  margin-bottom: 20px;
+}
+
+.switch-btn {
+  flex: 1;
+  padding: 12px 24px;
+  border: none;
+  background: transparent;
+  border-radius: calc(var(--radius) - 4px);
+  color: var(--text-main);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  outline: none;
+}
+
+.switch-btn.active {
+  background: linear-gradient(145deg, #7c74ff, #5a52e0);
+  color: white;
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.1), inset -2px -2px 4px rgba(255, 255, 255, 0.1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 600;
+  text-shadow: 1px 1px 2px var(--shadow-light), -1px -1px 2px var(--shadow-dark);
+}
+
+.card {
+  width: 100%;
+  max-width: 700px;
+  background-color: var(--bg-main);
+  border-radius: var(--radius);
+  padding: var(--padding);
+  box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
+  transition: var(--transition);
+}
+
+.card:hover {
+  box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light);
+}
+
+.card-title {
+  font-size: 20px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(163, 177, 198, 0.3);
+  font-weight: 500;
+}
+
+.form-group {
+  margin-bottom: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.input, .file-input {
+  width: 100%;
+  padding: 14px 18px;
+  border: none;
+  border-radius: 12px;
+  background-color: var(--bg-main);
+  box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+  font-size: 16px;
+  color: var(--text-main);
+  transition: var(--transition);
+}
+
+.input:focus {
+  outline: none;
+  box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light), 0 0 0 2px rgba(108, 99, 255, 0.3);
+}
+
+.file-input {
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.file-input::-webkit-file-upload-button {
+  visibility: hidden;
+}
+
+.file-input::before {
+  content: attr(data-text);
+  display: inline-block;
+  background: linear-gradient(to right, var(--primary), #5a52e0);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 3px 3px 6px var(--shadow-dark), -2px -2px 6px var(--shadow-light);
+  margin-right: 12px;
+}
+
+/* 文件选择器容器样式 */
+.file-input-container {
+  position: relative;
+  display: inline-block;
+  margin: 10px 0;
+  width: 100%;
+}
+
+/* 文件名显示样式 */
+.file-name-display {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background-color: var(--bg-main);
+  box-shadow: inset 2px 2px 4px var(--shadow-dark), inset -2px -2px 4px var(--shadow-light);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--text-main);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: var(--transition);
+}
+
+.file-name-display.has-file {
+  color: var(--primary);
+  box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
+}
+
+/* 隐藏浏览器默认的文件输入文本 */
+/* input[type="file"] {
+  color: transparent;
+} */
+
+.btn-group {
+  display: flex;
+  gap: 16px;
+  margin-top: 10px;
+  padding: 5px;
+  border-radius: 12px;
+  overflow: visible;
+}
+
+.btn {
+  flex: 1;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(145deg, var(--shadow-light), var(--shadow-dark));
+  box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  z-index: 1;
+  overflow: visible;
+}
+
+.btn:hover {
+  box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light);
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+  transform: translateY(0);
+}
+
+.btn-primary {
+  background: linear-gradient(145deg, #7c74ff, #5a52e0);
+  color: white;
+  box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(145deg, #8b83ff, #645ce6);
+}
+
+.progress-container {
+  width: 100%;
+  height: 8px;
+  background-color: var(--bg-main);
+  border-radius: 4px;
+  box-shadow: inset 2px 2px 4px var(--shadow-dark), inset -2px -2px 4px var(--shadow-light);
+  margin: 16px 0;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(to right, var(--primary), #5a52e0);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.status {
+  font-size: 14px;
+  color: var(--primary);
+  text-align: center;
+  margin: 12px 0;
+}
+
+.hidden {
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+#encryptCard, #decryptCard {
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.card-content-container {
+  position: relative;
+  min-height: 500px;
+  overflow: visible;
+}
+
+/* 确保按钮的阴影在所有容器中都能完全显示 */
+.card {
+  overflow: visible;
+}
+
+/* 底部页脚样式 */
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--bg-main);
+  box-shadow: 0 -2px 10px var(--shadow-dark);
+  padding: 12px 0;
+  text-align: center;
+  z-index: 1000;
+}
+
+.footer-content {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.footer p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-main);
+}
+
+/* 主题切换按钮样式 */
+.theme-toggle {
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(145deg, var(--shadow-light), var(--shadow-dark));
+  box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+  cursor: pointer;
+  transition: var(--transition);
+  outline: none;
+  position: fixed;
+  bottom: 200px;
+  right: 20px;
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+}
+
+.theme-toggle::before {
+  content: '\f186'; /* fa-moon */
+  font-size: 20px;
+  transition: var(--transition);
+}
+
+.theme-toggle:hover {
+  box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light);
+  transform: translateY(-2px);
+}
+
+.theme-toggle:active {
+  box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
+  transform: translateY(0);
+}
+
+/* 深色模式下的主题切换按钮样式 */
+body.dark-theme .theme-toggle {
+  background: white;
+  box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+}
+
+body.dark-theme .theme-toggle::before {
+  content: '\f185'; /* fa-sun */
+  color: #2a2a4a;
+}
+
+/* GitHub图标按钮样式 */
+.github-link {
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(145deg, var(--shadow-light), var(--shadow-dark));
+  box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+  cursor: pointer;
+  transition: var(--transition);
+  outline: none;
+  position: fixed;
+  bottom: 130px;
+  right: 20px;
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  color: var(--text-main);
+  text-decoration: none;
+}
+
+.github-link::before {
+  content: '\f09b'; /* fa-github */
+  font-family: 'Font Awesome 5 Brands';
+  font-size: 20px;
+  transition: var(--transition);
+}
+
+.github-link:hover {
+  box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light);
+  transform: translateY(-2px);
+}
+
+.github-link:active {
+  box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
+  transform: translateY(0);
+}
+
+/* 深色模式下的GitHub图标按钮样式 */
+body.dark-theme .github-link {
+  background: white;
+  box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+}
+
+body.dark-theme .github-link::before {
+  color: #2a2a4a;
+}
+
+/* 语言选择器样式 */
+.language-selector {
+  bottom: 60px; /* 在深色模式切换按钮下方 */
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(145deg, var(--shadow-light), var(--shadow-dark));
+  box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+  cursor: pointer;
+  transition: var(--transition);
+  outline: none;
+  position: fixed;
+  right: 20px;
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+}
+
+.language-selector span {
+  display: none; /* 隐藏文字 */
+}
+
+.language-selector::before {
+  content: '\f1ab'; /* fa-language */
+  font-size: 20px;
+  transition: var(--transition);
+}
+
+body.dark-theme .language-selector {
+  background: white;
+  box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+}
+
+body.dark-theme .language-selector::before {
+  color: #2a2a4a;
+}
+
+/* 语言弹窗样式 */
+.language-popup {
+  background: var(--bg-main);
+  border-radius: var(--radius);
+  box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+  padding: 10px;
+  z-index: 1002;
+}
+
+/* 语言选项按钮样式 */
+.language-option {
+  display: block;
+  width: 100%;
+  padding: 10px 20px;
+  border: none;
+  background: transparent;
+  color: var(--text-main);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  outline: none;
+  text-align: left;
+}
+
+/* 当前选中语言的高亮样式 */
+.language-option.active {
+  background: linear-gradient(145deg, #7c74ff, #5a52e0);
+  color: white;
+  border-radius: calc(var(--radius) - 4px);
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.1), inset -2px -2px 4px rgba(255, 255, 255, 0.1);
+}
+
+.language-option:hover:not(.active) {
+  background: var(--bg-secondary);
+  border-radius: calc(var(--radius) - 4px);
+}
+
+/* 拟态图标基础样式 */
+.icon {
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: linear-gradient(145deg, var(--shadow-light), var(--shadow-dark));
+  box-shadow: 2px 2px 4px var(--shadow-dark), -2px -2px 4px var(--shadow-light);
+}
+
+.icon-primary {
+  background: linear-gradient(145deg, #7c74ff, #5a52e0);
+  color: white;
+}
+
+/* 解密选项卡样式 */
+.decrypt-options {
+  display: flex;
+  background-color: var(--bg-main);
+  border-radius: var(--radius);
+  box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+  padding: 4px;
+  margin-bottom: 20px;
+}
+
+/* 解密下载区域样式 */
+#decrypt-download-area {
+  margin-top: 20px;
+}
+
+#decrypt-download-area .btn {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.decrypt-option-btn {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  background: transparent;
+  border-radius: calc(var(--radius) - 4px);
+  color: var(--text-main);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  outline: none;
+}
+
+.decrypt-option-btn.active {
+  background: linear-gradient(145deg, #7c74ff, #5a52e0);
+  color: white;
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.1), inset -2px -2px 4px rgba(255, 255, 255, 0.1);
+}
+
+.option-content {
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  position: relative;
+  height: 0;
+  overflow: hidden;
+  transition: opacity 0.3s ease, transform 0.3s ease, height 0.3s ease;
+}
+
+.option-content.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  height: auto;
+  overflow: visible;
+}
