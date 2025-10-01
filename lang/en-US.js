@@ -71,5 +71,21 @@ export default {
   mergingFile: 'Merging file...',
   // 占位符
   placeholderPassword: 'Please enter at least 4 characters',
-  placeholderDecryptPassword: 'Please enter the password used for encryption'
+  placeholderDecryptPassword: 'Please enter the password used for encryption',
+  
+  // Worker错误消息
+  fileReadFailed: 'File reading failed',
+  workerErrorCorruptedOrWrongPassword: 'File may be corrupted or password is incorrect',
+  workerErrorArrayMergeOutOfRange: 'Offset out of range when merging arrays',
+  workerErrorInvalidSystemIdentifier: 'Invalid VENC file: System identifier does not match',
+  workerErrorFileNameDecodingFailed: 'Failed to decode file name, using default file name',
+  workerErrorUnsupportedFileFormat: 'Unsupported file format: only .venc extension files are supported',
+  workerErrorFileTooSmall: 'Invalid VENC file: File is too small, it may not be an encrypted file',
+  workerErrorInvalidFileIdentifier: 'Invalid VENC file: Wrong file identifier, the file may be corrupted or not encrypted by this system',
+  workerErrorVkeyMismatch: 'vkey file does not match encrypted file',
+  workerErrorPasswordDecryptionFailed: 'Password decryption failed: Password may be incorrect',
+  workerErrorMissingCredentials: 'Please provide at least one of vkey file or password',
+  workerErrorCannotParseHeader: 'Invalid VENC file: Cannot parse custom header',
+  workerErrorDecryptionFailed: 'File decryption failed: File may be corrupted',
+  workerErrorUnknownOperation: 'Unknown operation type'
 };

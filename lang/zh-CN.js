@@ -71,5 +71,21 @@ export default {
   mergingFile: '合并文件中...',
   // 占位符
   placeholderPassword: '请输入至少4位字符',
-  placeholderDecryptPassword: '请输入加密时设置的密码'
+  placeholderDecryptPassword: '请输入加密时设置的密码',
+  
+  // Worker错误消息
+  fileReadFailed: '文件读取失败',
+  workerErrorCorruptedOrWrongPassword: '文件可能已损坏或密码错误',
+  workerErrorArrayMergeOutOfRange: '合并数组时偏移量超出范围',
+  workerErrorInvalidSystemIdentifier: '无效的VENC文件：系统标识符不匹配',
+  workerErrorFileNameDecodingFailed: '文件名解码失败，使用默认文件名',
+  workerErrorUnsupportedFileFormat: '不支持的文件格式：仅支持.venc扩展名的加密文件',
+  workerErrorFileTooSmall: '无效的VENC文件：文件过小，可能不是加密文件',
+  workerErrorInvalidFileIdentifier: '无效的VENC文件：错误的文件标识符，该文件可能损坏或非本系统加密文件',
+  workerErrorVkeyMismatch: 'vkey文件与加密文件不匹配',
+  workerErrorPasswordDecryptionFailed: '使用密码解密失败：密码错误',
+  workerErrorMissingCredentials: '请至少提供vkey文件或密码中的一项',
+  workerErrorCannotParseHeader: '无效的VENC文件：无法解析自定义文件头',
+  workerErrorDecryptionFailed: '文件解密失败：文件可能已损坏',
+  workerErrorUnknownOperation: '未知操作类型'
 };

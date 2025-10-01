@@ -374,7 +374,7 @@ window.addEventListener("DOMContentLoaded", () => {
         cacheManager.set(cacheKey, fileData, ["file"]);
         resolve(fileData);
       };
-      reader.onerror = () => reject(new Error("文件读取失败"));
+      reader.onerror = () => reject(new Error(t('fileReadFailed')));
       reader.readAsArrayBuffer(file);
     });
   }
@@ -899,11 +899,17 @@ window.addEventListener("DOMContentLoaded", () => {
 
         case "ERROR":
           // 错误处理
+          // 检查是否是worker错误代码（以workerError开头）
+          let errorMessage = data.message;
+          if (errorMessage.startsWith('workerError')) {
+            errorMessage = t(errorMessage);
+          }
+          
           if (data.module === "encrypt") {
-            encryptStatus.textContent = t('encryptionFailed') + ': ' + data.message;
+            encryptStatus.textContent = t('encryptionFailed') + ': ' + errorMessage;
             encryptStatus.style.color = "#ff4d4f";
           } else {
-            decryptStatus.textContent = t('decryptionFailed') + ': ' + data.message;
+            decryptStatus.textContent = t('decryptionFailed') + ': ' + errorMessage;
             decryptStatus.style.color = "#ff4d4f";
           }
           // 在控制台输出更详细的错误信息，方便调试

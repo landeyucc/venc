@@ -1,4 +1,4 @@
-// Web Worker for file encryption and decryption
+// 该Worker负责处理文件的加密和解密操作，包括AES-GCM加密与解密、venc文件标准与vkey恢复秘钥生成等。
 
 // Base64工具函数
 const base64 = {
@@ -46,8 +46,8 @@ async function generateFileKey() {
 
 // 使用PBKDF2派生密钥加密密钥(KEK)
 async function deriveKek(password, salt) {
-  // 注意：这里使用VENCLITE作为系统标识符，确保vkey文件可以独立使用
-  const passwordData = new TextEncoder().encode(password || 'VENCLITE');
+  // 注意：这里使用VENCLITE作为vkey标识符，确保vkey文件可以独立使用
+  const passwordData = new TextEncoder().encode(password || 'VENCRKEY');
   const importedKey = await crypto.subtle.importKey(
     'raw',
     passwordData,
@@ -218,7 +218,7 @@ async function decryptFileChunks(encryptedData, fileKey, progressCallback) {
         lastProgressUpdate = currentProgress;
       }
     } catch (error) {
-      throw new Error('解密失败：文件可能已损坏或密码错误');
+      throw new Error('workerErrorCorruptedOrWrongPassword');
     }
   }
   
@@ -251,7 +251,7 @@ function mergeUint8Arrays(arrays) {
       result.set(arr, offset);
       offset += arr.length;
     } else {
-      throw new Error('合并数组时偏移量超出范围');
+      throw new Error('workerErrorArrayMergeOutOfRange');
     }
   }
   return result;
@@ -272,45 +272,23 @@ function buildCustomHeader(hashValue, originalFileName) {
   const hashLengthView = new DataView(hashLengthBytes.buffer);
   hashLengthView.setUint32(0, hashValue.length, true);
   
-  // 文件名区域（128字节）- 包含[]包裹的原始文件名，不足补0，超过截断
-  const fileNameArea = new Uint8Array(128);
+  // 文件名区域（256字节）- 包含base64编码的原始文件名，不足补0
+  const fileNameArea = new Uint8Array(256);
   
-  // 处理文件名，确保[]存在
-  let wrappedFileName = '';
+  // 处理文件名，进行base64编码
+  let base64EncodedFileName = '';
   if (originalFileName) {
-    // 计算可用空间：128字节减去[]的空间（2字节），再考虑UTF-8编码
-    const availableBytes = 128 - 2;
+    // 对文件名进行base64编码
     const encoder = new TextEncoder();
-    
-    // 尝试编码完整文件名
-    let encodedFileName = encoder.encode(originalFileName);
-    
-    // 如果文件名过长，截断到可用空间
-    if (encodedFileName.length > availableBytes) {
-      // 确保截断后的文件名在UTF-8编码下有效
-      let truncatedLength = availableBytes;
-      while (truncatedLength > 0) {
-        try {
-          // 尝试解码截断的字节，确保UTF-8有效性
-          new TextDecoder().decode(encodedFileName.slice(0, truncatedLength));
-          break;
-        } catch (e) {
-          truncatedLength--;
-        }
-      }
-      encodedFileName = encodedFileName.slice(0, truncatedLength);
-    }
-    
-    // 创建带[]包裹的文件名
-    const fileNameStr = new TextDecoder().decode(encodedFileName);
-    wrappedFileName = `[${fileNameStr}]`;
+    const fileNameBytes = encoder.encode(originalFileName);
+    base64EncodedFileName = base64.encode(fileNameBytes);
   } else {
-    wrappedFileName = '[unnamed_file]';
+    base64EncodedFileName = 'unnamed_file';
   }
   
-  // 将带[]的文件名编码到128字节区域
-  const fileNameBytes = new TextEncoder().encode(wrappedFileName);
-  fileNameArea.set(fileNameBytes.slice(0, Math.min(fileNameBytes.length, 128)));
+  // 将base64编码的文件名存储到256字节区域
+  const encodedFileNameBytes = new TextEncoder().encode(base64EncodedFileName);
+  fileNameArea.set(encodedFileNameBytes.slice(0, Math.min(encodedFileNameBytes.length, 256)));
   
   // 合并所有部分
   return mergeUint8Arrays([
@@ -332,7 +310,7 @@ function parseCustomHeader(headerData) {
   // 验证系统标识符
   for (let i = 0; i < Math.min(systemId.length, VENC_SYSTEM_IDENTIFIER.length); i++) {
     if (systemId[i] !== VENC_SYSTEM_IDENTIFIER[i]) {
-      throw new Error('无效的VENC文件：系统标识符不匹配');
+      throw new Error('workerErrorInvalidSystemIdentifier');
     }
   }
   
@@ -345,18 +323,27 @@ function parseCustomHeader(headerData) {
   const hashValue = headerData.slice(offset, offset + hashLength);
   offset += hashLength;
   
-  // 文件名区域（128字节）
-  const fileNameBytes = headerData.slice(offset, offset + 128);
-  offset += 128;
+  // 文件名区域（256字节）
+  const fileNameBytes = headerData.slice(offset, offset + 256);
+  offset += 256;
   
-  // 解码并提取[]中的文件名
-  const fileNameArea = new TextDecoder().decode(fileNameBytes);
-  const startBracketIndex = fileNameArea.indexOf('[');
-  const endBracketIndex = fileNameArea.indexOf(']');
-  
+  // 解码并提取base64编码的文件名
   let originalFileName = 'decrypted_file';
-  if (startBracketIndex !== -1 && endBracketIndex > startBracketIndex) {
-    originalFileName = fileNameArea.substring(startBracketIndex + 1, endBracketIndex).trim() || 'decrypted_file';
+  try {
+    // 将文件名字节解码为字符串
+    const fileNameArea = new TextDecoder().decode(fileNameBytes);
+    
+    // 移除文件名后的空字符
+    const cleanFileName = fileNameArea.split('\0')[0].trim();
+    
+    // 尝试base64解码
+    if (cleanFileName && cleanFileName !== 'unnamed_file') {
+      const decodedData = base64.decode(cleanFileName);
+      originalFileName = new TextDecoder().decode(decodedData);
+    }
+  } catch (e) {
+    // 如果解码失败，使用默认文件名
+    console.warn('workerErrorFileNameDecodingFailed');
   }
   
   return {
@@ -431,12 +418,12 @@ self.onmessage = async (e) => {
 
         // 检查文件扩展名是否为.venc
         if (fileExtension && fileExtension.toLowerCase() !== '.venc') {
-          throw new Error('不支持的文件格式：仅支持.venc扩展名的加密文件');
+          throw new Error('workerErrorUnsupportedFileFormat');
         }
         
         // 检查文件是否包含VENC标识符
         if (encryptedFileData.length < 16) {
-          throw new Error('无效的VENC文件：文件过小，可能不是加密文件');
+          throw new Error('workerErrorFileTooSmall');
         }
 
         // 1. 获取文件密钥
@@ -454,7 +441,7 @@ self.onmessage = async (e) => {
         }
         
         if (!isValidIdentifier) {
-          throw new Error('无效的VENC文件：错误的文件标识符，该文件可能损坏或非本系统加密文件');
+          throw new Error('workerErrorInvalidFileIdentifier');
         }
         
         try {
@@ -474,7 +461,7 @@ self.onmessage = async (e) => {
             }
             
             if (!identifiersMatch) {
-              throw new Error('vkey文件与加密文件不匹配');
+              throw new Error('workerErrorVkeyMismatch');
             }
             
             // 派生KEK（使用空密码）
@@ -504,10 +491,10 @@ self.onmessage = async (e) => {
             
             // 如果超过最大尝试次数或头部长度到达文件末尾，说明密码错误
             if (passwordDecryptAttempts >= maxPasswordAttempts || headerEndPos >= encryptedFileData.length) {
-              throw new Error('使用密码解密失败：密码错误');
+              throw new Error('workerErrorPasswordDecryptionFailed');
             }
           } else {
-            throw new Error('请至少提供vkey文件或密码中的一项');
+            throw new Error('workerErrorMissingCredentials');
           }
         } catch (error) {
           throw new Error('解密失败：' + error.message);
@@ -549,7 +536,7 @@ self.onmessage = async (e) => {
           }
           
           if (!customHeaderFound) {
-            throw new Error('无效的VENC文件：无法解析自定义文件头');
+            throw new Error('workerErrorCannotParseHeader');
           }
         } catch (error) {
           throw new Error('解密失败：' + error.message);
@@ -593,7 +580,7 @@ self.onmessage = async (e) => {
             // 解密失败，尝试增加内容起始位置
             contentStartPos += 1;
             if (contentStartPos >= encryptedFileData.length) {
-              throw new Error('文件解密失败：文件可能已损坏');
+              throw new Error('workerErrorDecryptionFailed');
             }
           }
         }
@@ -602,7 +589,7 @@ self.onmessage = async (e) => {
       }
 
       default:
-        throw new Error('未知操作类型');
+        throw new Error('workerErrorUnknownOperation');
     }
   } catch (error) {
         console.error('Worker error:', error);
