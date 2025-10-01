@@ -1,5 +1,5 @@
 // 缓存版本和要缓存的文件列表
-const CACHE_VERSION = 'v8'; // 增加版本号以强制更新缓存，添加了自动更新功能
+const CACHE_VERSION = 'v2'; // 增加版本号以强制更新缓存，添加了自动更新功能
 const CACHE_FILES = [
   '/',
   '/index.html',

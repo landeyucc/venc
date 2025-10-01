@@ -159,7 +159,10 @@
         <h3 class="config-section-title" data-i18n="serverSettings">服务器设置</h3>
         <input type="text" id="serverUrl" class="config-input" placeholder="https://example.com/api" data-i18n-placeholder="serverUrl">
         <input type="text" id="apiKey" class="config-input" placeholder="身份验证密钥" data-i18n-placeholder="apiKey">
-        <button id="testServerConnection" class="config-button test-connection-btn" data-i18n="testConnection">立即测试</button>
+        <div class="test-connection-container">
+          <button id="testServerConnection" class="config-button test-connection-btn" data-i18n="testConnection">立即测试</button>
+          <div id="testConnectionResult" class="test-connection-result"></div>
+        </div>
       </div>
       
       <div class="config-section">

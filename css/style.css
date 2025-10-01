@@ -658,7 +658,7 @@ body.dark-theme .language-selector::before {
   border-radius: var(--radius);
   padding: var(--padding);
   width: 90%;
-  max-width: 500px;
+  max-width: 600px;
   max-height: 80vh;
   overflow-y: auto;
   box-shadow: 10px 10px 20px var(--shadow-dark), -10px -10px 20px var(--shadow-light);
@@ -827,6 +827,65 @@ body.dark-theme .language-selector::before {
 .config-modal-button:active {
   box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
   transform: translateY(1px);
+}
+
+/* 测试连接按钮和结果区域 */
+.test-connection-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.test-connection-btn {
+  width: 180px; /* 比默认配置按钮更宽 */
+}
+
+.test-connection-result {
+  flex: 1;
+  margin-top: 10px;
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0;
+  transition: var(--transition);
+  text-align: left;
+}
+
+.test-connection-result.testing {
+  background-color: rgba(108, 99, 255, 0.1);
+  color: var(--primary);
+  opacity: 1;
+  box-shadow: 3px 3px 6px var(--shadow-dark), -3px -3px 6px var(--shadow-light);
+}
+
+.test-connection-result.success {
+  background-color: rgba(76, 175, 80, 0.1);
+  color: #4CAF50;
+  opacity: 1;
+  box-shadow: 3px 3px 6px var(--shadow-dark), -3px -3px 6px var(--shadow-light);
+}
+
+.test-connection-result.error {
+  background-color: rgba(244, 67, 54, 0.1);
+  color: #F44336;
+  opacity: 1;
+  box-shadow: 3px 3px 6px var(--shadow-dark), -3px -3px 6px var(--shadow-light);
+}
+
+/* 深色模式下的测试结果样式调整 */
+body.dark-theme .test-connection-result.testing {
+  background-color: rgba(138, 133, 255, 0.1);
+}
+
+body.dark-theme .test-connection-result.success {
+  background-color: rgba(76, 175, 80, 0.2);
+}
+
+body.dark-theme .test-connection-result.error {
+  background-color: rgba(244, 67, 54, 0.2);
 }
 
 /* 服务器URL输入框样式 */

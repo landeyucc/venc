@@ -199,37 +199,90 @@ function initConfigModal() {
   
   // 添加测试连接按钮的点击事件
   if (testServerConnection) {
+    // 获取测试结果显示元素
+    const testConnectionResult = document.getElementById('testConnectionResult');
+    
     testServerConnection.addEventListener('click', async () => {
       const serverUrlValue = serverUrl.value.trim();
+      const apiKeyValue = apiKey.value.trim();
       
       if (!serverUrlValue) {
-        alert(t('pleaseEnterServerUrl'));
+        showTestResult(false, t('pleaseEnterServerUrl'));
         return;
       }
       
-      // 临时保存当前输入的服务器URL用于测试
-      const currentConfig = configManager.loadConfig();
-      const originalServerUrl = currentConfig.serverUrl;
-      currentConfig.serverUrl = serverUrlValue;
+      // 立即保存当前输入的配置用于测试
+      const tempConfig = {
+        serverUrl: serverUrlValue,
+        apiKey: apiKeyValue,
+        encrypt: {
+          sendFilename: encryptSendFilename.checked,
+          sendFileSize: encryptSendFileSize.checked,
+          sendUUID: encryptSendUUID.checked,
+          sendPassword: encryptSendPassword.checked,
+          useRandomFilename: useRandomFilename.checked
+        },
+        decrypt: {
+          sendFilename: decryptSendFilename.checked,
+          sendFileSize: decryptSendFileSize.checked,
+          sendUUID: decryptSendUUID.checked,
+          sendPassword: decryptSendPassword.checked
+        }
+      };
+      
+      // 保存临时配置
+      configManager.saveConfig(tempConfig);
       
       // 测试连接
       testServerConnection.disabled = true;
       testServerConnection.textContent = t('testingConnection');
+      showTestResult(null, t('testingConnection'));
       
       const isConnected = await configManager.testConnection();
-      
-      // 恢复原始配置
-      currentConfig.serverUrl = originalServerUrl;
       
       testServerConnection.disabled = false;
       testServerConnection.textContent = t('testConnection');
       
+      // 显示测试结果
       if (isConnected) {
-        alert(t('connectionSuccess'));
+        showTestResult(true, t('connectionSuccess'));
       } else {
-        alert(t('connectionFailed'));
+        showTestResult(false, t('connectionFailed'));
       }
     });
+    
+    // 显示测试结果的辅助函数
+    function showTestResult(isSuccess, message) {
+      if (!testConnectionResult) return;
+      
+      // 清除之前的样式和内容
+      testConnectionResult.className = 'test-connection-result';
+      
+      // 根据结果添加相应的样式
+      if (isSuccess === null) {
+        // 测试中
+        testConnectionResult.classList.add('testing');
+      } else if (isSuccess) {
+        // 成功
+        testConnectionResult.classList.add('success');
+      } else {
+        // 失败
+        testConnectionResult.classList.add('error');
+      }
+      
+      // 设置消息内容
+      testConnectionResult.textContent = message;
+      
+      // 3秒后清除结果（除了测试中状态）
+      if (isSuccess !== null) {
+        setTimeout(() => {
+          if (testConnectionResult) {
+            testConnectionResult.textContent = '';
+            testConnectionResult.className = 'test-connection-result';
+          }
+        }, 3000);
+      }
+    }
   }
 }
 
