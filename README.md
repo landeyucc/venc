@@ -1,5 +1,6 @@
 # VENC File Protection
 ![VENC File Protection](img/venc.ico)
+
 **Go to [中文文档](README_CN.md)**
 
 A simple, efficient browser-based file encryption and protection tool that supports encrypting and decrypting various types of files.
@@ -21,6 +22,10 @@ A simple, efficient browser-based file encryption and protection tool that suppo
 - Dark/light mode automatically adapts to system settings
 - Real-time display of encryption/decryption progress
 - Support for large file processing (up to 2GB)
+- Support for decrypting files using recovery keys
+- Support for PWA (Progressive Web App) technology, can be installed in browsers without downloading
+
+
 
 ### 🔧 Practical Functions
 - Chunk processing for large files to avoid browser crashes
