@@ -41,6 +41,12 @@ export default {
   downloadKeyFile: '下載密鑰文件',
   encryptionFailed: '加密失敗',
   workerErrorDetails: 'Worker錯誤詳情:',
+  // 其他
+  newVersionAvailable: '有新版本可用！',
+  refreshPageToUpdate: '是否刷新頁面以更新？',
+  appHasNewVersionDesc: '應用程式有新版本可用。更新將獲得最新功能和改進。',
+  updateNow: '立即更新',
+  updateLater: '稍後更新',
   // 解密相关
   fileDecryption: '文件解密',
   selectEncryptedFile: '選擇加密文件（.venc）',
@@ -87,5 +93,28 @@ export default {
   workerErrorMissingCredentials: '請至少提供vkey文件或密碼中的一項',
   workerErrorCannotParseHeader: '無效的VENC文件：無法解析自定義文件頭',
   workerErrorDecryptionFailed: '文件解密失敗：文件可能已損壞',
-  workerErrorUnknownOperation: '未知操作類型'
+  workerErrorUnknownOperation: '未知操作類型',
+  
+  // 配置相關
+  configuration: '配置',
+  configModalTitle: '設定',
+  configClose: '關閉',
+  configSave: '儲存',
+  configCancel: '取消',
+  testConnection: '立即測試',
+  pleaseEnterServerUrl: '請輸入伺服器URL',
+  testingConnection: '正在測試連接...',
+  connectionSuccess: '連接成功',
+  connectionFailed: '連接失敗',
+  serverSettings: '伺服器設定',
+  serverUrl: '伺服器URL',
+  encryptSettings: '加密設定',
+  decryptSettings: '解密設定',
+  sendFilename: '傳送原始文件名',
+  sendFileSize: '傳送文件大小',
+  sendUUID: '傳送UUID',
+  sendPassword: '傳送密碼',
+  useRandomFilename: '使用隨機UUID文件名',
+  configSaveSuccess: '設定儲存成功！',
+  configServerUrlInvalid: '伺服器URL無效'
 };

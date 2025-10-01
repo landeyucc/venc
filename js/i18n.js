@@ -103,7 +103,23 @@ export function changeLanguage(langCode) {
 /**
  * 应用翻译到DOM元素
  */
-function applyTranslations() {
+export function getCurrentLanguage() {
+  return currentLang;
+}
+
+/**
+ * 获取支持的语言列表
+ * @returns {Array} 支持的语言代码数组
+ */
+export function getSupportedLanguages() {
+  return Object.keys(translations);
+}
+
+/**
+ * 应用翻译到DOM元素
+ * @returns {void}
+ */
+export function applyTranslations() {
   // 更新HTML标签的lang属性
   document.documentElement.lang = currentLang;
   
@@ -139,20 +155,4 @@ function applyTranslations() {
   if (document.getElementById('languageSelector')) {
     document.getElementById('languageSelector').innerHTML = '';
   }
-}
-
-/**
- * 获取当前语言
- * @returns {string} 当前语言代码
- */
-export function getCurrentLanguage() {
-  return currentLang;
-}
-
-/**
- * 获取支持的语言列表
- * @returns {Array} 支持的语言代码数组
- */
-export function getSupportedLanguages() {
-  return Object.keys(translations);
 }

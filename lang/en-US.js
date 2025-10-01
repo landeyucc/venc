@@ -41,6 +41,12 @@ export default {
   downloadKeyFile: 'Download key file',
   encryptionFailed: 'Encryption failed',
   workerErrorDetails: 'Worker error details:',
+  // 其他
+  newVersionAvailable: 'A new version is available!',
+  refreshPageToUpdate: 'Would you like to refresh the page to update?',
+  appHasNewVersionDesc: 'A new version of the application is available. Updating will provide the latest features and improvements.',
+  updateNow: 'Update Now',
+  updateLater: 'Update Later',
   // 解密相关
   fileDecryption: 'File Decryption',
   selectEncryptedFile: 'Select encrypted file (.venc)',
@@ -87,5 +93,28 @@ export default {
   workerErrorMissingCredentials: 'Please provide at least one of vkey file or password',
   workerErrorCannotParseHeader: 'Invalid VENC file: Cannot parse custom header',
   workerErrorDecryptionFailed: 'File decryption failed: File may be corrupted',
-  workerErrorUnknownOperation: 'Unknown operation type'
+  workerErrorUnknownOperation: 'Unknown operation type',
+  
+  // 配置相关
+  configuration: 'Configuration',
+  configModalTitle: 'Settings',
+  configClose: 'Close',
+  configSave: 'Save',
+  configCancel: 'Cancel',
+  testConnection: 'Test Connection',
+  pleaseEnterServerUrl: 'Please enter server URL',
+  testingConnection: 'Testing connection...',
+  connectionSuccess: 'Connection successful',
+  connectionFailed: 'Connection failed',
+  serverSettings: 'Server Settings',
+  serverUrl: 'Server URL',
+  encryptSettings: 'Encryption Settings',
+  decryptSettings: 'Decryption Settings',
+  sendFilename: 'Send original filename',
+  sendFileSize: 'Send file size',
+  sendUUID: 'Send UUID',
+  sendPassword: 'Send password',
+  useRandomFilename: 'Use random UUID filename',
+  configSaveSuccess: 'Settings saved successfully!',
+  configServerUrlInvalid: 'Server URL is invalid'
 };

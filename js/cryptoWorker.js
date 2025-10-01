@@ -497,7 +497,8 @@ self.onmessage = async (e) => {
             throw new Error('workerErrorMissingCredentials');
           }
         } catch (error) {
-          throw new Error('解密失败：' + error.message);
+          // 直接抛出原始错误，让main.js统一处理错误消息格式
+          throw error;
         }
         
         // 2. 解析自定义文件头
@@ -539,8 +540,9 @@ self.onmessage = async (e) => {
             throw new Error('workerErrorCannotParseHeader');
           }
         } catch (error) {
-          throw new Error('解密失败：' + error.message);
-        }
+            // 直接抛出原始错误，让main.js统一处理错误消息格式
+            throw error;
+          }
 
         // 3. 解密文件内容
         // 找到文件内容的起始位置（跳过自定义文件头）

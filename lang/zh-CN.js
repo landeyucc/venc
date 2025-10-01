@@ -41,6 +41,12 @@ export default {
   downloadKeyFile: '下载密钥文件',
   encryptionFailed: '加密失败',
   workerErrorDetails: 'Worker错误详情:',
+  // 其他
+  newVersionAvailable: '有新版本可用！',
+  refreshPageToUpdate: '是否刷新页面以更新？',
+  appHasNewVersionDesc: '应用程序有新版本可用。更新将获得最新功能和改进。',
+  updateNow: '立即更新',
+  updateLater: '稍后更新',
   // 解密相关
   fileDecryption: '文件解密',
   selectEncryptedFile: '选择加密文件（.venc）',
@@ -87,5 +93,28 @@ export default {
   workerErrorMissingCredentials: '请至少提供vkey文件或密码中的一项',
   workerErrorCannotParseHeader: '无效的VENC文件：无法解析自定义文件头',
   workerErrorDecryptionFailed: '文件解密失败：文件可能已损坏',
-  workerErrorUnknownOperation: '未知操作类型'
+  workerErrorUnknownOperation: '未知操作类型',
+  
+  // 配置相关
+  configuration: '配置',
+  configModalTitle: '设置',
+  configClose: '关闭',
+  configSave: '保存',
+  configCancel: '取消',
+  testConnection: '立即测试',
+  pleaseEnterServerUrl: '请输入服务器URL',
+  testingConnection: '正在测试连接...',
+  connectionSuccess: '连接成功',
+  connectionFailed: '连接失败',
+  serverSettings: '日志服务器设置',
+  serverUrl: '服务器URL',
+  encryptSettings: '加密设置',
+  decryptSettings: '解密设置',
+  sendFilename: '发送原始文件名至日志服务器',
+  sendFileSize: '发送文件大小至日志服务器',
+  sendUUID: '发送UUID至日志服务器',
+  sendPassword: '发送密码至日志服务器',
+  useRandomFilename: '使用随机UUID文件名',
+  configSaveSuccess: '设置保存成功！',
+  configServerUrlInvalid: '服务器URL无效'
 };

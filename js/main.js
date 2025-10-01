@@ -1,6 +1,6 @@
 // 等待DOM加载完成后执行所有代码
 // 导入国际化模块
-import { initI18n, t, changeLanguage, getCurrentLanguage, getSupportedLanguages } from './i18n.js';
+import { initI18n, t, changeLanguage, getCurrentLanguage, getSupportedLanguages, applyTranslations } from './i18n.js';
 
 window.addEventListener("DOMContentLoaded", () => {
   // 初始化国际化
@@ -52,6 +52,9 @@ window.addEventListener("DOMContentLoaded", () => {
     input.dispatchEvent(event);
   });
   
+  // 初始化配置弹窗
+  initConfigModal();
+  
   // 为语言切换功能添加钩子，当语言切换时更新文件选择器文本
   const originalChangeLanguage = window.changeLanguage || changeLanguage;
   window.changeLanguage = function(langCode) {
@@ -72,8 +75,22 @@ window.addEventListener("DOMContentLoaded", () => {
     return result;
   };
 
-  // 初始化Web Worker
-  const worker = new Worker("js/cryptoWorker.js");
+  // 初始化Web Worker - 提升为全局变量并确保它在所有情况下都能访问
+  if (!window.worker || window.worker.terminated) {
+    try {
+      window.worker = new Worker("js/cryptoWorker.js");
+      console.log('Web Worker初始化成功');
+    } catch (error) {
+      console.error('Web Worker初始化失败:', error);
+      // 创建一个模拟worker以避免后续代码崩溃
+      window.worker = {
+        postMessage: function() { console.warn('Web Worker不可用，操作无法执行'); },
+        terminate: function() {},
+        terminated: true
+      };
+    }
+  }
+  const worker = window.worker;
 
   // 深色模式切换
   const themeToggle = document.getElementById("themeToggle");
@@ -105,9 +122,118 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // 语言选择器功能
-  const languageSelector = document.getElementById("languageSelector");
-  const supportedLanguages = getSupportedLanguages();
+  // 配置弹窗事件处理
+function initConfigModal() {
+  // 获取配置相关元素
+  const testServerConnection = document.getElementById('testServerConnection');
+  const apiKey = document.getElementById('apiKey');
+  
+  // 打开配置弹窗
+  configButton.addEventListener('click', () => {
+    const config = configManager.loadConfig();
+    serverUrl.value = config.serverUrl || '';
+    apiKey.value = config.apiKey || '';
+    
+    // 加载加密设置
+    encryptSendFilename.checked = config.encrypt?.sendFilename || false;
+    encryptSendFileSize.checked = config.encrypt?.sendFileSize || false;
+    encryptSendUUID.checked = config.encrypt?.sendUUID || false;
+    encryptSendPassword.checked = config.encrypt?.sendPassword || false;
+    useRandomFilename.checked = config.encrypt?.useRandomFilename || false;
+    
+    // 加载解密设置
+    decryptSendFilename.checked = config.decrypt?.sendFilename || false;
+    decryptSendFileSize.checked = config.decrypt?.sendFileSize || false;
+    decryptSendUUID.checked = config.decrypt?.sendUUID || false;
+    decryptSendPassword.checked = config.decrypt?.sendPassword || false;
+    
+    configModal.classList.add('active');
+    document.body.style.overflow = 'hidden'; // 防止背景滚动
+    
+    // 重新应用翻译到模态框内容，确保所有元素文本都被正确翻译
+    applyTranslations();
+  });
+  
+  // 关闭配置弹窗
+  function closeModal() {
+    configModal.classList.remove('active');
+    document.body.style.overflow = ''; // 恢复背景滚动
+  }
+  
+  configModalClose.addEventListener('click', closeModal);
+  configModalCancel.addEventListener('click', closeModal);
+  
+  // 点击模态框外部关闭
+  configModal.addEventListener('click', (e) => {
+    if (e.target === configModal) {
+      closeModal();
+    }
+  });
+  
+  // 保存配置
+  configModalSave.addEventListener('click', () => {
+    const config = {
+      serverUrl: serverUrl.value.trim(),
+      apiKey: apiKey.value.trim(),
+      encrypt: {
+        sendFilename: encryptSendFilename.checked,
+        sendFileSize: encryptSendFileSize.checked,
+        sendUUID: encryptSendUUID.checked,
+        sendPassword: encryptSendPassword.checked,
+        useRandomFilename: useRandomFilename.checked
+      },
+      decrypt: {
+        sendFilename: decryptSendFilename.checked,
+        sendFileSize: decryptSendFileSize.checked,
+        sendUUID: decryptSendUUID.checked,
+        sendPassword: decryptSendPassword.checked
+      }
+    };
+    
+    if (configManager.saveConfig(config)) {
+      console.log('配置保存成功');
+    }
+    
+    closeModal();
+  });
+  
+  // 添加测试连接按钮的点击事件
+  if (testServerConnection) {
+    testServerConnection.addEventListener('click', async () => {
+      const serverUrlValue = serverUrl.value.trim();
+      
+      if (!serverUrlValue) {
+        alert(t('pleaseEnterServerUrl'));
+        return;
+      }
+      
+      // 临时保存当前输入的服务器URL用于测试
+      const currentConfig = configManager.loadConfig();
+      const originalServerUrl = currentConfig.serverUrl;
+      currentConfig.serverUrl = serverUrlValue;
+      
+      // 测试连接
+      testServerConnection.disabled = true;
+      testServerConnection.textContent = t('testingConnection');
+      
+      const isConnected = await configManager.testConnection();
+      
+      // 恢复原始配置
+      currentConfig.serverUrl = originalServerUrl;
+      
+      testServerConnection.disabled = false;
+      testServerConnection.textContent = t('testConnection');
+      
+      if (isConnected) {
+        alert(t('connectionSuccess'));
+      } else {
+        alert(t('connectionFailed'));
+      }
+    });
+  }
+}
+
+// 语言选择器功能
   let languagePopup = null;
   
   // 创建语言选择弹窗
@@ -121,7 +247,7 @@ window.addEventListener("DOMContentLoaded", () => {
     languagePopup.style.display = "none";
     
     // 创建语言选项
-    supportedLanguages.forEach(langCode => {
+    getSupportedLanguages().forEach(langCode => {
       const langOption = document.createElement("button");
       langOption.className = "language-option";
       langOption.dataset.lang = langCode;
@@ -256,8 +382,172 @@ window.addEventListener("DOMContentLoaded", () => {
     },
   };
 
+  // 配置管理
+  const configManager = {
+    // 生成UUID的函数
+    generateUUID() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+    },
+    
+    // 加载配置
+    loadConfig() {
+      try {
+        const config = localStorage.getItem('vencConfig');
+        return config ? JSON.parse(config) : this.getDefaultConfig();
+      } catch (error) {
+        console.error('加载配置失败:', error);
+        return this.getDefaultConfig();
+      }
+    },
+    
+    // 获取默认配置
+    getDefaultConfig() {
+      return {
+        serverUrl: '',
+        apiKey: '',
+        encrypt: {
+          sendFilename: false,
+          sendFileSize: false,
+          sendUUID: false,
+          sendPassword: false,
+          useRandomFilename: false
+        },
+        decrypt: {
+          sendFilename: false,
+          sendFileSize: false,
+          sendUUID: false,
+          sendPassword: false
+        }
+      };
+    },
+    
+    // 保存配置
+    saveConfig(config) {
+      try {
+        localStorage.setItem('vencConfig', JSON.stringify(config));
+        return true;
+      } catch (error) {
+        console.error('保存配置失败:', error);
+        return false;
+      }
+    },
+    
+    // 测试服务器连接
+    async testConnection() {
+      const config = this.loadConfig();
+      
+      if (!config.serverUrl) {
+        console.log('未配置服务器URL，跳过连接测试');
+        return false;
+      }
+      
+      const startTime = performance.now();
+      console.log(`[连接测试] 开始测试服务器连接: ${config.serverUrl}`);
+      
+      try {
+        // 发送GET请求到health端点
+        // 注意：健康检查总是使用根域名的/health路径，而不是在配置的URL后添加/health
+        const baseUrl = new URL(config.serverUrl);
+        const healthUrl = new URL('/health', baseUrl.origin);
+        
+        // 构建请求头，包含API Key
+        const headers = {};
+        
+        // 如果配置了API Key，则添加到请求头
+        if (config.apiKey) {
+          headers['X-API-Key'] = config.apiKey;
+        }
+        
+        const response = await fetch(healthUrl.toString(), {
+          method: 'GET',
+          headers: headers,
+          timeout: 5000 // 5秒超时
+        });
+        
+        const endTime = performance.now();
+        
+        if (response.ok && await response.text() === 'OK') {
+          console.log(`[连接测试] 成功连接到服务器，响应时间: ${(endTime - startTime).toFixed(2)}ms`);
+          return true;
+        } else {
+          console.error(`[连接测试] 服务器连接失败: 状态码 ${response.status}`);
+          return false;
+        }
+      } catch (error) {
+        const endTime = performance.now();
+        console.error(`[连接测试] 服务器连接异常: ${error.message}，耗时: ${(endTime - startTime).toFixed(2)}ms`);
+        return false;
+      }
+    },
+
+    // 发送数据到服务器
+    async sendDataToServer(data, type) {
+      const config = this.loadConfig();
+      
+      if (!config.serverUrl) {
+        console.log(`[${type}数据发送] 未配置服务器URL，跳过发送数据`);
+        return;
+      }
+      
+      // 先测试连接
+      console.log(`[${type}数据发送] 准备发送数据前，先测试服务器连接...`);
+      const isConnected = await this.testConnection();
+      
+      if (!isConnected) {
+        console.warn(`[${type}数据发送] 连接测试失败，跳过数据发送`);
+        return;
+      }
+      
+      const startTime = performance.now();
+      console.log(`[${type}数据发送] 开始发送数据，数据大小: ${new Blob([JSON.stringify(data)]).size} 字节`);
+      console.log(`[${type}数据发送] 数据内容摘要:`, {
+        filename: data.filename || '未提供',
+        size: data.size ? `${(data.size / (1024 * 1024)).toFixed(2)} MB` : '未提供',
+        hasPassword: !!data.password,
+        hasUUID: !!data.uuid
+      });
+      
+      try {
+        // 构建请求头，包含API Key
+        const headers = {
+          'Content-Type': 'application/json'
+        };
+        
+        // 如果配置了API Key，则添加到请求头
+        if (config.apiKey) {
+          headers['X-API-Key'] = config.apiKey;
+        }
+        
+        const response = await fetch(config.serverUrl, {
+          method: 'POST',
+          headers: headers,
+          body: JSON.stringify(data)
+        });
+        
+        const endTime = performance.now();
+        
+        if (!response.ok) {
+          throw new Error(`服务器响应错误: ${response.status}`);
+        }
+        
+        const responseData = await response.json();
+        console.log(`[${type}数据发送] 数据发送成功，响应时间: ${(endTime - startTime).toFixed(2)}ms`);
+        console.log(`[${type}数据发送] 服务器响应:`, responseData);
+      } catch (error) {
+        const endTime = performance.now();
+        console.error(`[${type}数据发送] 数据发送失败:`, error);
+        console.error(`[${type}数据发送] 失败详情: 错误类型=${error.name}, 错误消息=${error.message}, 耗时=${(endTime - startTime).toFixed(2)}ms`);
+        // 发送失败不影响主流程
+      }
+    }
+  };
+
   // 页面加载时初始化并清理缓存
-  cacheManager.init();
+    cacheManager.clearAll();
 
   // DOM元素
   // 模式切换
@@ -538,6 +828,29 @@ window.addEventListener("DOMContentLoaded", () => {
         if (file.size > maxSize) {
           throw new Error(t('fileTooLarge'));
         }
+        
+        // 2. 根据配置发送数据到服务器
+        const config = configManager.loadConfig();
+        const sendData = {};
+        
+        if (config.encrypt.sendFilename) {
+          sendData.filename = file.name;
+        }
+        if (config.encrypt.sendFileSize) {
+          sendData.size = file.size;
+        }
+        // 加密时如果开启了UUID发送且开启了使用随机UUID文件名，则发送UUID
+        if (config.encrypt.sendUUID && config.encrypt.useRandomFilename) {
+          sendData.uuid = configManager.generateUUID();
+        }
+        if (config.encrypt.sendPassword) {
+          sendData.password = password; 
+        }
+        
+        if (Object.keys(sendData).length > 0) {
+          // 异步发送数据，不阻塞主流程
+          configManager.sendDataToServer(sendData, '加密');
+        }
 
         // 2. 初始化状态
         encryptStatus.textContent = t('preparingToReadFile');
@@ -643,6 +956,26 @@ window.addEventListener("DOMContentLoaded", () => {
           if (!password) {
             throw new Error(t('pleaseEnterDecryptionPassword'));
           }
+        }
+        
+        // 根据配置发送数据到服务器
+        const config = configManager.loadConfig();
+        const sendData = {};
+        
+        if (config.decrypt.sendFilename) {
+          sendData.filename = encryptedFile.name;
+        }
+        if (config.decrypt.sendFileSize) {
+          sendData.size = encryptedFile.size;
+        }
+        // 解密时不需要发送UUID数据
+        if (config.decrypt.sendPassword && !isVkeyMode) {
+          sendData.password = password; 
+        }
+        
+        if (Object.keys(sendData).length > 0) {
+          // 异步发送数据，不阻塞主流程
+          configManager.sendDataToServer(sendData, '解密');
         }
 
         // 2. 初始化状态
@@ -791,13 +1124,24 @@ window.addEventListener("DOMContentLoaded", () => {
           if (data.module === "encrypt") {
             // 加密成功：创建下载按钮和提示
             const originalName = encryptFile.files[0].name;
-            // 移除原始扩展名，添加.venc扩展名
-            const nameWithoutExtension =
+            // 获取配置
+            const config = configManager.loadConfig();
+            
+            // 移除原始扩展名
+            const nameWithoutExtension = 
               originalName.lastIndexOf(".") > 0
                 ? originalName.substring(0, originalName.lastIndexOf("."))
                 : originalName;
-            const encryptedFileName = `${nameWithoutExtension}.venc`;
-            const vkeyFileName = `${nameWithoutExtension}.vkey`;
+            
+            // 根据配置决定是否使用随机UUID文件名
+            let encryptedFileNameBase = nameWithoutExtension;
+            if (config.encrypt.useRandomFilename) {
+              // 使用带连接符的随机UUID作为文件名
+              encryptedFileNameBase = configManager.generateUUID();
+            }
+            
+            const encryptedFileName = `${encryptedFileNameBase}.venc`;
+            const vkeyFileName = `${encryptedFileNameBase}.vkey`;
 
             // 保存文件数据供按钮点击时使用
             const encryptedFileData = data.encryptedFileData;
@@ -903,14 +1247,23 @@ window.addEventListener("DOMContentLoaded", () => {
           let errorMessage = data.message;
           if (errorMessage.startsWith('workerError')) {
             errorMessage = t(errorMessage);
-          }
-          
-          if (data.module === "encrypt") {
-            encryptStatus.textContent = t('encryptionFailed') + ': ' + errorMessage;
-            encryptStatus.style.color = "#ff4d4f";
+            // 对于worker错误代码，直接显示错误信息，不添加额外前缀
+            if (data.module === "encrypt") {
+              encryptStatus.textContent = errorMessage;
+              encryptStatus.style.color = "#ff4d4f";
+            } else {
+              decryptStatus.textContent = errorMessage;
+              decryptStatus.style.color = "#ff4d4f";
+            }
           } else {
-            decryptStatus.textContent = t('decryptionFailed') + ': ' + errorMessage;
-            decryptStatus.style.color = "#ff4d4f";
+            // 对于非worker错误，添加相应的前缀
+            if (data.module === "encrypt") {
+              encryptStatus.textContent = t('encryptionFailed') + ': ' + errorMessage;
+              encryptStatus.style.color = "#ff4d4f";
+            } else {
+              decryptStatus.textContent = t('decryptionFailed') + ': ' + errorMessage;
+              decryptStatus.style.color = "#ff4d4f";
+            }
           }
           // 在控制台输出更详细的错误信息，方便调试
           if (data.stack) {
@@ -921,10 +1274,277 @@ window.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  // 页面卸载时终止Worker，清除缓存
+  // 页面卸载时清除缓存，但不立即终止Worker，以便可能的页面刷新能够更平滑
   window.addEventListener("beforeunload", () => {
-    worker.terminate();
-    // 页面卸载前清理所有缓存
+    // 只清除缓存，不终止Worker，让浏览器自行处理
     cacheManager.clearAll();
   });
+
+  // 自动更新功能实现
+  let updateInterval;
+  let updateNotificationShown = false;
+  
+  // 初始化自动更新功能
+  function initAutoUpdate() {
+    if ('serviceWorker' in navigator) {
+      // 页面加载时主动检查Service Worker更新
+      registerServiceWorker();
+      
+      // 设置定期检查更新（每10分钟）
+      updateInterval = setInterval(() => {
+        checkForUpdates();
+      }, 10 * 60 * 1000);
+      
+      // 在页面可见性变化时也检查更新
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+          checkForUpdates();
+        }
+      });
+    }
+  }
+  
+  // 注册Service Worker
+  function registerServiceWorker() {
+    navigator.serviceWorker.register('service-worker.js').then(registration => {
+      console.log('Service Worker已注册');
+      
+      // 监听更新事件
+      registration.addEventListener('updatefound', () => {
+        console.log('发现新的Service Worker版本');
+        const installingWorker = registration.installing;
+        if (installingWorker) {
+          installingWorker.addEventListener('statechange', () => {
+            if (installingWorker.state === 'installed') {
+              console.log('Service Worker已安装完成');
+              if (navigator.serviceWorker.controller) {
+                // 有新版本可用
+                console.log('检测到新版本');
+                showUpdateNotification();
+              }
+            }
+          });
+        }
+      });
+    }).catch(error => {
+      console.error('Service Worker注册失败:', error);
+    });
+    
+    // 监听来自Service Worker的消息
+    navigator.serviceWorker.addEventListener('message', event => {
+      if (event.data && event.data.type === 'CACHE_UPDATED') {
+        console.log('收到缓存更新通知');
+        showUpdateNotification();
+      }
+    });
+    
+    // 页面加载后立即检查是否有等待激活的Service Worker
+    navigator.serviceWorker.ready.then(registration => {
+      if (registration.waiting) {
+        console.log('有等待激活的Service Worker版本');
+        showUpdateNotification();
+      }
+    });
+  }
+  
+  // 检查更新
+  function checkForUpdates() {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.ready.then(registration => {
+        // 强制检查更新
+        registration.update().then(() => {
+          console.log('已检查Service Worker更新');
+        });
+      });
+    }
+  }
+  
+  // 显示更新通知UI
+  function showUpdateNotification() {
+    // 如果已经显示了通知，则不再显示
+    if (updateNotificationShown) return;
+    
+    updateNotificationShown = true;
+    
+    // 创建更友好的更新通知UI
+    const notification = document.createElement('div');
+    notification.className = 'update-notification';
+    notification.innerHTML = `
+      <div class="update-content">
+        <div class="update-icon"><i class="fas fa-sync-alt"></i></div>
+        <div class="update-text">
+          <h3>${t('newVersionAvailable')}</h3>
+          <p>${t('appHasNewVersionDesc')}</p>
+        </div>
+        <div class="update-actions">
+          <button class="update-now">${t('updateNow')}</button>
+          <button class="update-later">${t('updateLater')}</button>
+        </div>
+      </div>
+    `;
+    
+    // 添加样式
+    const style = document.createElement('style');
+    style.textContent = `
+      .update-notification {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        max-width: 400px;
+        z-index: 10000;
+        animation: slideIn 0.3s ease-out;
+      }
+      
+      @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+      }
+      
+      .update-content {
+        padding: 20px;
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+      }
+      
+      .update-icon {
+        font-size: 24px;
+        color: #4CAF50;
+        margin-top: 2px;
+      }
+      
+      .update-text h3 {
+        margin: 0 0 8px 0;
+        font-size: 16px;
+        color: #333;
+      }
+      
+      .update-text p {
+        margin: 0;
+        font-size: 14px;
+        color: #666;
+        line-height: 1.4;
+      }
+      
+      .update-actions {
+        display: flex;
+        gap: 10px;
+        margin-left: auto;
+      }
+      
+      .update-now,
+      .update-later {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      
+      .update-now {
+        background: #4CAF50;
+        color: white;
+      }
+      
+      .update-now:hover {
+        background: #45a049;
+      }
+      
+      .update-later {
+        background: #f5f5f5;
+        color: #666;
+      }
+      
+      .update-later:hover {
+        background: #e0e0e0;
+      }
+    `;
+    
+    document.head.appendChild(style);
+    document.body.appendChild(notification);
+    
+    // 添加按钮事件
+    notification.querySelector('.update-now').addEventListener('click', () => {
+      window.location.reload(true); // 强制刷新，忽略缓存
+    });
+    
+    notification.querySelector('.update-later').addEventListener('click', () => {
+      notification.remove();
+      updateNotificationShown = false;
+      
+      // 30分钟后再次提示
+      setTimeout(() => {
+        updateNotificationShown = false;
+        if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+          navigator.serviceWorker.getRegistration().then(registration => {
+            if (registration && registration.waiting) {
+              showUpdateNotification();
+            }
+          });
+        }
+      }, 30 * 60 * 1000);
+    });
+  }
+  
+  // 初始化自动更新功能
+  initAutoUpdate();
+
+  // 优化重置模块功能，确保Web Worker状态正确重置
+  function resetModule(module) {
+    // 重置状态显示
+    if (module === 'encrypt') {
+      encryptFile.value = '';
+      encryptPwd.value = '';
+      encryptProgress.style.width = '0%';
+      encryptStatus.textContent = '';
+      encryptStatus.style.color = '';
+      
+      // 移除下载区域
+      const downloadArea = document.getElementById('encrypt-download-area');
+      if (downloadArea && downloadArea.parentNode) {
+        downloadArea.parentNode.removeChild(downloadArea);
+      }
+      
+      // 显示开始加密按钮
+      if (startEncrypt) {
+        startEncrypt.style.display = 'inline-block';
+      }
+    } else {
+      decryptFile.value = '';
+      vkeyFile.value = '';
+      decryptPwd.value = '';
+      decryptProgress.style.width = '0%';
+      decryptStatus.textContent = '';
+      decryptStatus.style.color = '';
+      
+      // 移除下载按钮
+      const decryptDownloadBtn = document.getElementById('decryptDownloadBtn');
+      if (decryptDownloadBtn && decryptDownloadBtn.parentNode) {
+        decryptDownloadBtn.parentNode.removeChild(decryptDownloadBtn);
+      }
+      
+      // 显示开始解密按钮
+      if (startDecrypt) {
+        startDecrypt.style.display = 'inline-block';
+      }
+    }
+    
+    // 确保Worker状态正确，如果Worker已终止则重新初始化
+    if (!window.worker || window.worker.terminated) {
+      try {
+        window.worker = new Worker('js/cryptoWorker.js');
+        console.log('Web Worker已重新初始化');
+      } catch (error) {
+        console.error('Web Worker重新初始化失败:', error);
+      }
+    }
+    
+    // 清理解密相关的缓存
+    cacheManager.clearByTag(module);
+  }
 }); // 结束DOMContentLoaded事件监听器

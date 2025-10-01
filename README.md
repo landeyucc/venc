@@ -24,6 +24,7 @@ A simple, efficient browser-based file encryption and protection tool that suppo
 - Support for large file processing (up to 2GB)
 - Support for decrypting files using recovery keys
 - Support for PWA (Progressive Web App) technology, can be installed in browsers and used offline
+- Support for logging, recording encryption/decryption operation related information
 
 ### 🔧 Practical Functions
 - Chunk processing for large files to avoid browser crashes
@@ -66,6 +67,8 @@ Directly visit the [VENC File Protection](https://venc.vl-x.vip/) website to sta
 
 ### File Decryption
 There are two decryption methods:
+- Password mode: Decrypt using the password set during encryption
+- Recovery key mode: Decrypt using the recovery key file
 
 #### Decryption Using Recovery Key
 1. Select "Decrypt" mode

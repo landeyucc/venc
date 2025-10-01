@@ -18,11 +18,22 @@
   <meta name="mobile-web-app-capable" content="yes">
 </head>
 <body>
-  <div class="header">
-    <h1 class="title" data-i18n="title">VENC文件保护</h1>
-  </div>
-
-  <div class="card">
+  <div class="container">
+    <!-- 左侧标题区域 -->
+    <div class="left-panel">
+      <div class="logo-container">
+        <img src="img/venc.ico" alt="VENC Logo" class="logo">
+      </div>
+      <h1 class="title" data-i18n="title">VENC</h1>
+      <button id="configButton" class="config-button" data-i18n="configuration">配置</button>
+    </div>
+    
+    <!-- 垂直分割线 -->
+    <div class="divider"></div>
+    
+    <!-- 右侧主体内容区域 -->
+    <div class="right-panel">
+      <div class="card">
     <!-- 模式切换器 -->
     <div class="mode-switch">
       <button class="switch-btn active" id="encryptModeBtn" data-i18n="encrypt">加密</button>
@@ -135,5 +146,101 @@
       });
     }
   </script>
+  
+  <!-- 配置弹窗 -->
+  <div id="configModal" class="config-modal">
+    <div class="config-modal-content">
+      <div class="config-modal-header">
+        <h2 class="config-modal-title" data-i18n="configModalTitle">设置</h2>
+        <button id="configModalClose" class="config-modal-close" aria-label="关闭">&times;</button>
+      </div>
+      
+      <div class="config-section">
+        <h3 class="config-section-title" data-i18n="serverSettings">服务器设置</h3>
+        <input type="text" id="serverUrl" class="config-input" placeholder="https://example.com/api" data-i18n-placeholder="serverUrl">
+        <input type="text" id="apiKey" class="config-input" placeholder="身份验证密钥" data-i18n-placeholder="apiKey">
+        <button id="testServerConnection" class="config-button test-connection-btn" data-i18n="testConnection">立即测试</button>
+      </div>
+      
+      <div class="config-section">
+        <h3 class="config-section-title" data-i18n="encryptSettings">加密设置</h3>
+        <div class="config-option">
+          <label class="config-option-label" data-i18n="sendFilename">发送原始文件名</label>
+          <label class="config-checkbox">
+            <input type="checkbox" id="encryptSendFilename">
+            <span class="config-checkbox-slider"></span>
+          </label>
+        </div>
+        <div class="config-option">
+          <label class="config-option-label" data-i18n="sendFileSize">发送文件大小</label>
+          <label class="config-checkbox">
+            <input type="checkbox" id="encryptSendFileSize">
+            <span class="config-checkbox-slider"></span>
+          </label>
+        </div>
+        <div class="config-option">
+          <label class="config-option-label" data-i18n="sendUUID">发送UUID</label>
+          <label class="config-checkbox">
+            <input type="checkbox" id="encryptSendUUID">
+            <span class="config-checkbox-slider"></span>
+          </label>
+        </div>
+        <div class="config-option">
+          <label class="config-option-label" data-i18n="sendPassword">发送密码</label>
+          <label class="config-checkbox">
+            <input type="checkbox" id="encryptSendPassword">
+            <span class="config-checkbox-slider"></span>
+          </label>
+        </div>
+        <div class="config-option">
+          <label class="config-option-label" data-i18n="useRandomFilename">使用随机UUID文件名</label>
+          <label class="config-checkbox">
+            <input type="checkbox" id="useRandomFilename">
+            <span class="config-checkbox-slider"></span>
+          </label>
+        </div>
+      </div>
+      
+      <div class="config-section">
+        <h3 class="config-section-title" data-i18n="decryptSettings">解密设置</h3>
+        <div class="config-option">
+          <label class="config-option-label" data-i18n="sendFilename">发送原始文件名</label>
+          <label class="config-checkbox">
+            <input type="checkbox" id="decryptSendFilename">
+            <span class="config-checkbox-slider"></span>
+          </label>
+        </div>
+        <div class="config-option">
+          <label class="config-option-label" data-i18n="sendFileSize">发送文件大小</label>
+          <label class="config-checkbox">
+            <input type="checkbox" id="decryptSendFileSize">
+            <span class="config-checkbox-slider"></span>
+          </label>
+        </div>
+        <div class="config-option">
+          <label class="config-option-label" data-i18n="sendUUID">发送UUID</label>
+          <label class="config-checkbox">
+            <input type="checkbox" id="decryptSendUUID">
+            <span class="config-checkbox-slider"></span>
+          </label>
+        </div>
+        <div class="config-option">
+          <label class="config-option-label" data-i18n="sendPassword">发送密码</label>
+          <label class="config-checkbox">
+            <input type="checkbox" id="decryptSendPassword">
+            <span class="config-checkbox-slider"></span>
+          </label>
+        </div>
+      </div>
+      
+      <div class="config-modal-footer">
+        <button id="configModalCancel" class="config-modal-button secondary" data-i18n="configCancel">取消</button>
+        <button id="configModalSave" class="config-modal-button primary" data-i18n="configSave">保存</button>
+      </div>
+    </div>
+  </div>
+    
+    </div> <!-- 关闭right-panel -->
+  </div> <!-- 关闭container -->
 </body>
 </html>
