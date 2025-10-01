@@ -23,9 +23,7 @@ A simple, efficient browser-based file encryption and protection tool that suppo
 - Real-time display of encryption/decryption progress
 - Support for large file processing (up to 2GB)
 - Support for decrypting files using recovery keys
-- Support for PWA (Progressive Web App) technology, can be installed in browsers without downloading
-
-
+- Support for PWA (Progressive Web App) technology, can be installed in browsers and used offline
 
 ### 🔧 Practical Functions
 - Chunk processing for large files to avoid browser crashes
