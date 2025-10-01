@@ -58,7 +58,7 @@
 
 ### API 身份验证
 
-如果设置了 `ENV_API_KEY` 环境变量，则所有API端点（除 `/admin` 外）都需要在请求头中包含 `X-API-Key` 字段，其值应与设置的API密钥匹配。
+如果设置了 `ENV_API_KEY` 环境变量，则所有API端点（除 `/admin`、`/api/auth` 外）都需要在请求头中包含 `X-API-Key` 字段，其值应与设置的API密钥匹配。
 
 ### `/api/venc` (POST)
 

@@ -61,20 +61,49 @@ function parseFileName(filename) {
   }
 }
 
-// 生成下一个序列号
+// 生成下一个序列号 - 现在通过查询所有条目自动递增
 async function generateNextNum() {
   try {
-    // 从 KV 获取当前最大序列号
-    const currentMaxNum = await VENC_KV_NAMESPACE.get('MAX_NUM', { type: 'json' });
-    const nextNum = (currentMaxNum || 0) + 1;
+    const list = await VENC_KV_NAMESPACE.list({ prefix: 'ENTRY_' });
     
-    // 保存新的最大序列号
-    await VENC_KV_NAMESPACE.put('MAX_NUM', JSON.stringify(nextNum));
-    return nextNum;
+    if (list.keys.length === 0) {
+      return 1; // 如果没有条目，从1开始
+    }
+    
+    // 提取所有条目的Num并找出最大值
+    let maxNum = 0;
+    for (const key of list.keys) {
+      // 从键名中提取Num值（格式为ENTRY_数字）
+      const numMatch = key.name.match(/^ENTRY_(\d+)$/);
+      if (numMatch) {
+        const num = parseInt(numMatch[1]);
+        maxNum = Math.max(maxNum, num);
+      }
+    }
+    
+    return maxNum + 1;
   } catch (error) {
     console.error('生成序列号失败:', error);
     return Date.now(); // 失败时使用时间戳作为后备
   }
+}
+
+// 生成北京时间字符串，格式为000000[年取两位月与日]00:00
+function generateBeijingTime() {
+  // 创建当前时间对象
+  const now = new Date();
+  
+  // 转换为北京时间（UTC+8）
+  const beijingTime = new Date(now.getTime() + 8 * 60 * 60 * 1000);
+  
+  const year = beijingTime.getUTCFullYear().toString().substr(2); // 取年份后两位
+  const month = String(beijingTime.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(beijingTime.getUTCDate()).padStart(2, '0');
+  const hours = String(beijingTime.getUTCHours()).padStart(2, '0');
+  const minutes = String(beijingTime.getUTCMinutes()).padStart(2, '0');
+  
+  // 格式为[年取两位月与日]00:00
+  return `${year}${month}${day}-${hours}:${minutes}`;
 }
 
 // 处理加密/解密请求
@@ -87,18 +116,19 @@ async function handleApiRequest(data) {
     const { designation, file_name } = parseFileName(data.filename);
     
     // 构建 KV 数据对象
-    const kvData = {
-      Num: num,
-      Cloud_Path: data.cloud_path || 'OTTC', // 默认值
-      Designation: designation,
-      ENC_Algorithm: 'VENC-AES-GCM256bit',
-      ENC_ID: data.uuid || '',
-      File_Name: file_name,
-      File_Size: data.size ? formatFileSize(data.size) : '',
-      Password: data.password || '',
-      Type: 'TAV', // 默认值
-      Tag: '' // 默认留空
-    };
+      const kvData = {
+        Num: num,
+        Cloud_Path: data.cloud_path || 'OTTC', // 默认值
+        Designation: designation,
+        ENC_Algorithm: 'VENC-AES-GCM256bit',
+        ENC_ID: data.uuid || '',
+        File_Name: file_name,
+        File_Size: data.size ? formatFileSize(data.size) : '',
+        Password: data.password || '',
+        Type: 'TAV', // 默认值
+        Tag: '', // 默认留空
+        Time: generateBeijingTime() // 添加北京时间
+      };
     
     // 保存到 KV，使用序列号作为键
     const kvKey = `ENTRY_${num}`;
@@ -137,8 +167,13 @@ async function getAllEntries() {
       }
     }
     
-    // 按序列号排序
-    entries.sort((a, b) => parseInt(a.Num) - parseInt(b.Num));
+    // 按时间排序（最新的在前）
+    entries.sort((a, b) => {
+      // 如果没有Time字段，按Num排序作为后备
+      if (!a.Time) return 1;
+      if (!b.Time) return -1;
+      return b.Time.localeCompare(a.Time);
+    });
     
     return entries;
   } catch (error) {
@@ -186,7 +221,8 @@ async function createNewEntry(data) {
       File_Size: data.File_Size || '',
       Password: data.Password || '',
       Type: 'TAV',
-      Tag: data.Tag || ''
+      Tag: data.Tag || '',
+      Time: generateBeijingTime() // 添加北京时间
     };
     
     // 保存到 KV
@@ -363,21 +399,32 @@ function generateAdminInterface() {
           display: none;
         }
 
+        /* 表格容器样式 */
+        .table-container {
+          width: 100%;
+          overflow-x: auto;
+          overflow-y: hidden;
+          margin-bottom: 20px;
+        }
+
         /* 表格样式 */
         table {
           width: 100%;
           border-collapse: separate;
           border-spacing: 0;
           overflow: hidden;
-          border-radius: var(--radius);
           background-color: var(--bg-main);
           box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
+          white-space: nowrap;
         }
 
         th, td {
           padding: 16px;
           text-align: left;
           border-bottom: 1px solid rgba(163, 177, 198, 0.1);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         th {
@@ -482,9 +529,8 @@ function generateAdminInterface() {
             font-size: 28px;
           }
           
-          table {
-            display: block;
-            overflow-x: auto;
+          .table-container {
+            margin-bottom: 15px;
           }
           
           .btn-group {
@@ -519,24 +565,28 @@ function generateAdminInterface() {
           </div>
           
           <!-- 数据表格 -->
-          <table id="data-table">
-            <thead>
-              <tr>
-                <th>Num</th>
-                <th>Cloud_Path</th>
-                <th>Designation</th>
-                <th>ENC_Algorithm</th>
-                <th>ENC_ID</th>
-                <th>File_Name</th>
-                <th>File_Size</th>
-                <th>Type</th>
-                <th>操作</th>
-              </tr>
-            </thead>
-            <tbody id="data-body">
-              <!-- 数据行将通过 JavaScript 动态生成 -->
-            </tbody>
-          </table>
+          <div class="table-container">
+            <table id="data-table">
+              <thead>
+                <tr>
+                  <th>Num</th>
+                  <th>Time</th>
+                  <th>Cloud_Path</th>
+                  <th>Designation</th>
+                  <th>ENC_Algorithm</th>
+                  <th>ENC_ID</th>
+                  <th>File_Name</th>
+                  <th>File_Size</th>
+                  <th>Type</th>
+                  <th>Tag</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="data-body">
+                <!-- 数据行将通过 JavaScript 动态生成 -->
+              </tbody>
+            </table>
+          </div>
           
           <!-- 编辑表单 -->
           <div id="edit-form" class="edit-form hidden">
@@ -772,6 +822,7 @@ function generateAdminInterface() {
               entries.forEach(entry => {
                 const row = document.createElement('tr');
                   row.innerHTML = '<td>' + entry.Num + '</td>' +
+                    '<td>' + (entry.Time || '') + '</td>' +
                     '<td>' + entry.Cloud_Path + '</td>' +
                     '<td>' + entry.Designation + '</td>' +
                     '<td>' + entry.ENC_Algorithm + '</td>' +
@@ -779,6 +830,7 @@ function generateAdminInterface() {
                     '<td>' + entry.File_Name + '</td>' +
                     '<td>' + entry.File_Size + '</td>' +
                     '<td>' + entry.Type + '</td>' +
+                    '<td>' + (entry.Tag || '') + '</td>' +
                     '<td>' +
                     '  <button class="edit-btn" data-key="' + entry.key + '">编辑</button>' +
                     '  <button class="delete-btn btn-danger" data-key="' + entry.key + '">删除</button>' +
@@ -887,7 +939,7 @@ async function handleRequest(request) {
     return response;
   };
   
-  // 健康检查端点
+  // 健康检查端点 - 保留API密钥验证
   if (url.pathname === '/health') {
     // 验证身份秘钥
     if (API_KEY !== 'default_api_key' && !validateApiKey(request)) {
@@ -905,7 +957,7 @@ async function handleRequest(request) {
     return addCorsHeaders(response);
   }
   
-  // API 端点：接收 VENC 应用发送的数据
+  // API 端点：接收 VENC 应用发送的数据 - 保留API密钥验证
   if (url.pathname === '/api/venc' && request.method === 'POST') {
     // 验证身份秘钥
     if (API_KEY !== 'default_api_key' && !validateApiKey(request)) {
@@ -957,17 +1009,7 @@ async function handleRequest(request) {
   
   // 登录认证
   if (url.pathname === '/api/auth' && request.method === 'POST') {
-    // 验证身份秘钥
-    if (API_KEY !== 'default_api_key' && !validateApiKey(request)) {
-      const response = new Response(JSON.stringify({
-        success: false,
-        message: '身份验证失败：无效的API密钥'
-      }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' }
-      });
-      return addCorsHeaders(response);
-    }
+    // 无需API密钥验证，这是登录认证的端点
     
     if (!validateRequest(request)) {
       const response = new Response(JSON.stringify({ success: false, message: '无效的请求格式' }), {
@@ -998,20 +1040,8 @@ async function handleRequest(request) {
     }
   }
   
-  // 获取所有条目
+  // 获取所有条目 - 不需要API密钥验证
   if (url.pathname === '/api/entries' && request.method === 'GET') {
-    // 验证身份秘钥
-    if (API_KEY !== 'default_api_key' && !validateApiKey(request)) {
-      const response = new Response(JSON.stringify({
-        success: false,
-        message: '身份验证失败：无效的API密钥'
-      }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' }
-      });
-      return addCorsHeaders(response);
-    }
-    
     const entries = await getAllEntries();
     const response = new Response(JSON.stringify(entries), {
       headers: { 'Content-Type': 'application/json' }
@@ -1019,20 +1049,8 @@ async function handleRequest(request) {
     return addCorsHeaders(response);
   }
   
-  // 获取单个条目
+  // 获取单个条目 - 不需要API密钥验证
   if (url.pathname.match(/^\/api\/entry\/([^/]+)$/) && request.method === 'GET') {
-    // 验证身份秘钥
-    if (API_KEY !== 'default_api_key' && !validateApiKey(request)) {
-      const response = new Response(JSON.stringify({
-        success: false,
-        message: '身份验证失败：无效的API密钥'
-      }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' }
-      });
-      return addCorsHeaders(response);
-    }
-    
     const key = url.pathname.split('/').pop();
     const entry = await getEntry(key);
     const response = new Response(JSON.stringify(entry), {
@@ -1041,19 +1059,8 @@ async function handleRequest(request) {
     return addCorsHeaders(response);
   }
   
-  // 更新条目
+  // 更新条目 - 不需要API密钥验证
   if (url.pathname.match(/^\/api\/update\/([^/]+)$/) && request.method === 'PUT') {
-    // 验证身份秘钥
-    if (API_KEY !== 'default_api_key' && !validateApiKey(request)) {
-      const response = new Response(JSON.stringify({
-        success: false,
-        message: '身份验证失败：无效的API密钥'
-      }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' }
-      });
-      return addCorsHeaders(response);
-    }
     
     if (!validateRequest(request)) {
       const response = new Response(JSON.stringify({ success: false, message: '无效的请求格式' }), {
@@ -1082,20 +1089,8 @@ async function handleRequest(request) {
     }
   }
   
-  // 创建新条目
+  // 创建新条目 - 不需要API密钥验证
   if (url.pathname === '/api/create' && request.method === 'POST') {
-    // 验证身份秘钥
-    if (API_KEY !== 'default_api_key' && !validateApiKey(request)) {
-      const response = new Response(JSON.stringify({
-        success: false,
-        message: '身份验证失败：无效的API密钥'
-      }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' }
-      });
-      return addCorsHeaders(response);
-    }
-    
     if (!validateRequest(request)) {
       const response = new Response(JSON.stringify({ success: false, message: '无效的请求格式' }), {
         status: 415,
@@ -1122,20 +1117,8 @@ async function handleRequest(request) {
     }
   }
   
-  // 删除条目
+  // 删除条目 - 不需要API密钥验证
   if (url.pathname.match(/^\/api\/delete\/([^/]+)$/) && request.method === 'DELETE') {
-    // 验证身份秘钥
-    if (API_KEY !== 'default_api_key' && !validateApiKey(request)) {
-      const response = new Response(JSON.stringify({
-        success: false,
-        message: '身份验证失败：无效的API密钥'
-      }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' }
-      });
-      return addCorsHeaders(response);
-    }
-    
     try {
       const key = url.pathname.split('/').pop();
       await VENC_KV_NAMESPACE.delete(key);
