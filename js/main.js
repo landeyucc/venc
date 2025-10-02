@@ -950,8 +950,8 @@ function initConfigModal() {
         if (password.length < 4) {
           throw new Error(t('passwordTooShort'));
         }
-        // 添加文件大小限制检查（2GB）
-        const maxSize = 2 * 1024 * 1024 * 1024; // 2GB
+        // 添加文件大小限制检查（4GB）
+        const maxSize = 4 * 1024 * 1024 * 1024; // 4GB
         if (file.size > maxSize) {
           throw new Error(t('fileTooLarge'));
         }

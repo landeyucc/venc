@@ -25,7 +25,7 @@ export default {
   startDecryption: 'Start Decryption',
   pleaseSelectFile: 'Please select a file to encrypt',
   passwordTooShort: 'Password cannot be less than 4 characters',
-  fileTooLarge: 'File size cannot exceed 2GB',
+  fileTooLarge: 'File size cannot exceed 4GB',
   preparingToReadFile: 'Preparing to read file...',
   readingFile: 'Reading file...',
   fileReadComplete: 'File reading complete...',

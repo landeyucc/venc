@@ -387,16 +387,109 @@ function generateAdminInterface() {
           background: linear-gradient(145deg, #ff8b8b, #e66464);
         }
 
+        /* 普通按钮 */
+        .edit-btn, .cancel-btn {
+          background: linear-gradient(145deg, #f0f0f0, #d1d1d1);
+          color: var(--text-primary);
+          box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+        }
+
+        .edit-btn:hover, .cancel-btn:hover {
+          background: linear-gradient(145deg, #f9f9f9, #dbdbdb);
+        }
+
+        /* 表格内按钮样式 */
+        .edit-btn, .delete-btn, .save-btn, .cancel-btn {
+          padding: 6px 12px;
+          font-size: 14px;
+          margin-right: 8px;
+        }
+
         /* 工具栏样式 */
         .toolbar {
           margin-bottom: 30px;
           display: flex;
           gap: 16px;
+          flex-wrap: wrap;
         }
 
         /* 隐藏元素 */
         .hidden {
           display: none;
+        }
+        
+        /* 搜索框样式 */
+        .search-container {
+          display: flex;
+          align-items: center;
+          margin-left: auto;
+          margin-right: 10px;
+          gap: 8px;
+        }
+        
+        #search-input {
+          padding: 10px 16px;
+          border: none;
+          border-radius: 12px 0 0 12px;
+          width: 200px;
+          font-size: 14px;
+          color: var(--text-main);
+          background-color: var(--bg-main);
+          box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+          transition: var(--transition);
+        }
+        
+        #search-input:focus {
+          outline: none;
+          box-shadow: inset 5px 5px 10px var(--shadow-dark), inset -5px -5px 10px var(--shadow-light), 0 0 0 2px rgba(108, 99, 255, 0.3);
+        }
+        
+        #search-button {
+          padding: 10px 16px;
+          border: none;
+          border-radius: 0 12px 12px 0;
+          background: linear-gradient(145deg, var(--shadow-light), var(--shadow-dark));
+          box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+          font-size: 14px;
+          font-weight: 500;
+          color: var(--text-main);
+          cursor: pointer;
+          transition: var(--transition);
+          outline: none;
+        }
+        
+        #search-button:hover {
+          box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light);
+          transform: translateY(-1px);
+        }
+        
+        #search-button:active {
+          box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+          transform: translateY(0);
+        }
+        
+        #clear-search-button {
+          padding: 10px 14px;
+          border: none;
+          border-radius: 12px;
+          background: linear-gradient(145deg, var(--shadow-light), var(--shadow-dark));
+          box-shadow: 5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+          font-size: 14px;
+          font-weight: 500;
+          color: var(--text-main);
+          cursor: pointer;
+          transition: var(--transition);
+          outline: none;
+        }
+        
+        #clear-search-button:hover {
+          box-shadow: 6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light);
+          transform: translateY(-1px);
+        }
+        
+        #clear-search-button:active {
+          box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+          transform: translateY(0);
         }
 
         /* 表格容器样式 */
@@ -486,6 +579,51 @@ function generateAdminInterface() {
           cursor: not-allowed;
         }
 
+        /* 密码验证对话框样式 */
+        .password-dialog {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 1000;
+        }
+
+        .password-dialog-content {
+          background-color: var(--bg-main);
+          padding: 30px;
+          border-radius: var(--radius);
+          box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
+          width: 100%;
+          max-width: 400px;
+        }
+
+        .password-dialog-content h3 {
+          margin-bottom: 20px;
+        }
+
+        .password-dialog-content input {
+          width: 100%;
+          padding: 14px 18px;
+          margin-bottom: 20px;
+          border: none;
+          border-radius: 12px;
+          background-color: var(--bg-main);
+          box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+          font-size: 16px;
+          color: var(--text-main);
+        }
+
+        .password-dialog-buttons {
+          display: flex;
+          gap: 16px;
+          justify-content: flex-end;
+        }
+
         /* 按钮组样式 */
         .btn-group {
           display: flex;
@@ -512,14 +650,45 @@ function generateAdminInterface() {
           text-align: center;
         }
 
-        /* 表格内按钮样式 */
-        .edit-btn, .delete-btn {
-          padding: 6px 12px;
-          font-size: 14px;
-          margin-right: 8px;
+        /* 排序样式 */
+        .sortable {
+          cursor: pointer;
+          user-select: none;
+          position: relative;
+          padding-right: 25px !important;
         }
-
-        /* 响应式设计 */
+        
+        .sort-icon {
+          position: absolute;
+          right: 8px;
+          top: 50%;
+          transform: translateY(-50%);
+          font-size: 12px;
+          color: var(--text-secondary);
+        }
+        
+        .sort-icon.asc::after {
+          content: '↑';
+          color: var(--primary);
+        }
+        
+        .sort-icon.desc::after {
+          content: '↓';
+          color: var(--primary);
+        }
+        
+        /* 行内编辑样式 */
+        .edit-field input {
+          width: 100%;
+          padding: 6px 8px;
+          border: 1px solid var(--primary);
+          border-radius: 4px;
+          background-color: rgba(108, 99, 255, 0.05);
+        }
+        
+        .hidden {
+          display: none;
+        }
         @media (max-width: 768px) {
           .container {
             padding: 20px;
@@ -562,6 +731,15 @@ function generateAdminInterface() {
           <div class="toolbar">
             <button id="refresh-button">刷新数据</button>
             <button id="create-button" class="btn-primary">新建条目</button>
+            <button id="export-button">导出数据</button>
+            <button id="import-button">导入数据</button>
+            <button id="clear-all-button" class="btn-danger">清空键值</button>
+            <div class="search-container">
+              <input type="text" id="search-input" placeholder="输入关键词搜索">
+              <button id="search-button">搜索</button>
+              <button id="clear-search-button" class="hidden">清除</button>
+            </div>
+            <input type="file" id="import-file" accept=".json" class="hidden">
           </div>
           
           <!-- 数据表格 -->
@@ -569,16 +747,17 @@ function generateAdminInterface() {
             <table id="data-table">
               <thead>
                 <tr>
-                  <th>Num</th>
-                  <th>Time</th>
-                  <th>Cloud_Path</th>
-                  <th>Designation</th>
-                  <th>ENC_Algorithm</th>
-                  <th>ENC_ID</th>
-                  <th>File_Name</th>
-                  <th>File_Size</th>
-                  <th>Type</th>
-                  <th>Tag</th>
+                  <th class="sortable" data-field="Num">Num <span class="sort-icon asc">↑</span></th>
+                  <th class="sortable" data-field="Time">Time <span class="sort-icon"></span></th>
+                  <th class="sortable" data-field="Cloud_Path">Cloud_Path <span class="sort-icon"></span></th>
+                  <th class="sortable" data-field="Designation">Designation <span class="sort-icon"></span></th>
+                  <th class="sortable" data-field="ENC_Algorithm">ENC_Algorithm <span class="sort-icon"></span></th>
+                  <th class="sortable" data-field="ENC_ID">ENC_ID <span class="sort-icon"></span></th>
+                  <th class="sortable" data-field="File_Name">File_Name <span class="sort-icon"></span></th>
+                  <th class="sortable" data-field="File_Size">File_Size <span class="sort-icon"></span></th>
+                  <th class="sortable" data-field="Type">Type <span class="sort-icon"></span></th>
+                  <th class="sortable" data-field="Tag">Tag <span class="sort-icon"></span></th>
+                  <th class="sortable" data-field="Password">Password <span class="sort-icon"></span></th>
                   <th>操作</th>
                 </tr>
               </thead>
@@ -586,67 +765,6 @@ function generateAdminInterface() {
                 <!-- 数据行将通过 JavaScript 动态生成 -->
               </tbody>
             </table>
-          </div>
-          
-          <!-- 编辑表单 -->
-          <div id="edit-form" class="edit-form hidden">
-            <h3>编辑条目</h3>
-            <input type="hidden" id="edit-key">
-            
-            <div class="form-group">
-              <label for="edit-Num">Num:</label>
-              <input type="text" id="edit-Num" readonly>
-            </div>
-            
-            <div class="form-group">
-              <label for="edit-Cloud_Path">Cloud_Path:</label>
-              <input type="text" id="edit-Cloud_Path">
-            </div>
-            
-            <div class="form-group">
-              <label for="edit-Designation">Designation:</label>
-              <input type="text" id="edit-Designation">
-            </div>
-            
-            <div class="form-group">
-              <label for="edit-ENC_Algorithm">ENC_Algorithm:</label>
-              <input type="text" id="edit-ENC_Algorithm" readonly>
-            </div>
-            
-            <div class="form-group">
-              <label for="edit-ENC_ID">ENC_ID:</label>
-              <input type="text" id="edit-ENC_ID">
-            </div>
-            
-            <div class="form-group">
-              <label for="edit-File_Name">File_Name:</label>
-              <input type="text" id="edit-File_Name">
-            </div>
-            
-            <div class="form-group">
-              <label for="edit-File_Size">File_Size:</label>
-              <input type="text" id="edit-File_Size">
-            </div>
-            
-            <div class="form-group">
-              <label for="edit-Password">Password:</label>
-              <input type="text" id="edit-Password">
-            </div>
-            
-            <div class="form-group">
-              <label for="edit-Type">Type:</label>
-              <input type="text" id="edit-Type">
-            </div>
-            
-            <div class="form-group">
-              <label for="edit-Tag">Tag:</label>
-              <input type="text" id="edit-Tag">
-            </div>
-            
-            <button id="save-button" class="btn-primary">保存</button>
-            <button id="cancel-button">取消</button>
-            <div id="save-success" class="success-message hidden">保存成功</div>
-            <div id="save-error" class="error-message hidden"></div>
           </div>
         </div>
       </div>
@@ -659,7 +777,7 @@ function generateAdminInterface() {
             if (loginData) {
               const { timestamp, isLoggedIn } = JSON.parse(loginData);
               const now = Date.now();
-              const tenMinutes = 10 * 60 * 1000;
+              const tenMinutes = 30 * 60 * 1000;
               
               // 检查登录状态是否有效（未过期且已登录）
               if (isLoggedIn && (now - timestamp < tenMinutes)) {
@@ -685,6 +803,28 @@ function generateAdminInterface() {
           } catch (error) {
             console.error('保存登录状态失败:', error);
           }
+        }
+        
+        // 应用搜索过滤
+        function applySearch(entries) {
+          if (!searchKeyword.trim()) {
+            return entries;
+          }
+          
+          const keyword = searchKeyword.toLowerCase().trim();
+          return entries.filter(entry => {
+            // 遍历条目的所有字段
+            for (const key in entry) {
+              if (entry.hasOwnProperty(key) && key !== 'key') {
+                const value = String(entry[key] || '').toLowerCase();
+                // 全词匹配搜索
+                if (value.includes(keyword)) {
+                  return true;
+                }
+              }
+            }
+            return false;
+          });
         }
         
         // 登出功能
@@ -724,125 +864,159 @@ function generateAdminInterface() {
           }
         });
         
-        // 页面加载时检查登录状态
-        window.addEventListener('load', checkLoginStatus);
+        // 全局变量
+        let sortField = 'Num';
+        let sortDirection = 'asc';
+        let searchKeyword = '';
+        let allEntries = []; // 存储所有原始数据
         
-        // 刷新按钮
-        document.getElementById('refresh-button').addEventListener('click', loadData);
-        
-        // 创建新条目按钮
-        document.getElementById('create-button').addEventListener('click', () => {
-          document.getElementById('edit-key').value = '';
-          document.getElementById('edit-Num').value = '系统自动生成';
-          document.getElementById('edit-Cloud_Path').value = 'OTTC';
-          document.getElementById('edit-Designation').value = '';
-          document.getElementById('edit-ENC_Algorithm').value = 'VENC-AES-GCM256bit';
-          document.getElementById('edit-ENC_ID').value = '';
-          document.getElementById('edit-File_Name').value = '';
-          document.getElementById('edit-File_Size').value = '';
-          document.getElementById('edit-Password').value = '';
-          document.getElementById('edit-Type').value = 'TAV';
-          document.getElementById('edit-Tag').value = '';
+        // 执行搜索
+        function performSearch() {
+          searchKeyword = document.getElementById('search-input').value;
           
-          document.getElementById('save-success').classList.add('hidden');
-          document.getElementById('save-error').classList.add('hidden');
-          document.getElementById('edit-form').classList.remove('hidden');
-        });
-        
-        // 取消编辑按钮
-        document.getElementById('cancel-button').addEventListener('click', () => {
-          document.getElementById('edit-form').classList.add('hidden');
-        });
-        
-        // 保存按钮
-        document.getElementById('save-button').addEventListener('click', async () => {
-          const key = document.getElementById('edit-key').value;
-          const data = {
-            Cloud_Path: document.getElementById('edit-Cloud_Path').value || '',
-            Designation: document.getElementById('edit-Designation').value || '',
-            ENC_ID: document.getElementById('edit-ENC_ID').value || '',
-            File_Name: document.getElementById('edit-File_Name').value || '',
-            File_Size: document.getElementById('edit-File_Size').value || '',
-            Password: document.getElementById('edit-Password').value || '',
-            Type: document.getElementById('edit-Type').value || '',
-            Tag: document.getElementById('edit-Tag').value || ''
-          };
-          
-          const successDiv = document.getElementById('save-success');
-          const errorDiv = document.getElementById('save-error');
-          
-          try {
-            let endpoint = key ? '/api/update/' + key : '/api/create';
-            let method = key ? 'PUT' : 'POST';
-            
-            const response = await fetch(endpoint, {
-              method: method,
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(data)
-            });
-            
-            const result = await response.json();
-            
-            if (result.success) {
-              successDiv.textContent = result.message;
-              successDiv.classList.remove('hidden');
-              errorDiv.classList.add('hidden');
-              
-              // 保存成功后重新加载数据
-              setTimeout(() => {
-                loadData();
-                document.getElementById('edit-form').classList.add('hidden');
-              }, 1000);
-            } else {
-              errorDiv.textContent = result.message || '保存失败';
-              errorDiv.classList.remove('hidden');
-              successDiv.classList.add('hidden');
-            }
-          } catch (error) {
-            errorDiv.textContent = '保存失败，请重试';
-            errorDiv.classList.remove('hidden');
-            successDiv.classList.add('hidden');
+          // 显示/隐藏清除按钮
+          const clearButton = document.getElementById('clear-search-button');
+          if (searchKeyword.trim()) {
+            clearButton.classList.remove('hidden');
+          } else {
+            clearButton.classList.add('hidden');
           }
-        });
+          
+          // 重新加载并过滤数据
+          loadData();
+        }
+        
+        // 清除搜索
+        function clearSearch() {
+          document.getElementById('search-input').value = '';
+          searchKeyword = '';
+          document.getElementById('clear-search-button').classList.add('hidden');
+          loadData();
+        }
+        
+        // 绑定表头排序事件
+        function setupSorting() {
+          const headers = document.querySelectorAll('.sortable');
+          headers.forEach(header => {
+            header.addEventListener('click', () => {
+              const field = header.getAttribute('data-field');
+              
+              // 如果点击的是当前排序字段，则切换排序方向
+              if (sortField === field) {
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+              } else {
+                // 否则设置新的排序字段并默认升序
+                sortField = field;
+                sortDirection = 'asc';
+              }
+              
+              // 更新排序图标
+              updateSortIcons();
+              
+              // 重新加载数据并排序
+              loadData();
+            });
+          });
+        }
+        
+        // 更新排序图标
+        function updateSortIcons() {
+          const headers = document.querySelectorAll('.sortable');
+          headers.forEach(header => {
+            const icon = header.querySelector('.sort-icon');
+            const field = header.getAttribute('data-field');
+            
+            // 清除所有排序图标
+            icon.className = 'sort-icon';
+            
+            // 为当前排序字段设置图标
+            if (sortField === field) {
+              icon.classList.add(sortDirection);
+            }
+          });
+        }
+        
+        // 自定义排序函数
+        function customSort(a, b) {
+          let valueA = a[sortField] || '';
+          let valueB = b[sortField] || '';
+          
+          // 确保值是字符串
+          valueA = String(valueA);
+          valueB = String(valueB);
+          
+          // 判断是否为数字（整数或小数）
+          const isNumberA = !isNaN(valueA) && valueA.trim() !== '';
+          const isNumberB = !isNaN(valueB) && valueB.trim() !== '';
+          
+          // 数字优先排序
+          if (isNumberA && isNumberB) {
+            // 转换为数字进行比较
+            const numA = parseFloat(valueA);
+            const numB = parseFloat(valueB);
+            return sortDirection === 'asc' ? numA - numB : numB - numA;
+          } else if (isNumberA) {
+            // A是数字，B不是，数字排在前面
+            return sortDirection === 'asc' ? -1 : 1;
+          } else if (isNumberB) {
+            // B是数字，A不是，数字排在前面
+            return sortDirection === 'asc' ? 1 : -1;
+          } else {
+            // 都不是数字，按字符串a-z排序
+            return sortDirection === 'asc' 
+              ? valueA.localeCompare(valueB) 
+              : valueB.localeCompare(valueA);
+          }
+        }
         
         // 加载数据
         async function loadData() {
           try {
             const response = await fetch('/api/entries');
-            const entries = await response.json();
+            allEntries = await response.json();
+            
+            // 应用搜索过滤
+            let entries = applySearch(allEntries);
+            
+            // 应用排序
+            entries.sort(customSort);
             
             const tableBody = document.getElementById('data-body');
             tableBody.innerHTML = '';
             
             if (entries.length === 0) {
               const row = document.createElement('tr');
-              row.innerHTML = '<td colspan="9" style="text-align: center;">暂无数据</td>';
+              row.innerHTML = '<td colspan="10" style="text-align: center;">暂无数据</td>';
               tableBody.appendChild(row);
             } else {
               entries.forEach(entry => {
                 const row = document.createElement('tr');
-                  row.innerHTML = '<td>' + entry.Num + '</td>' +
-                    '<td>' + (entry.Time || '') + '</td>' +
-                    '<td>' + entry.Cloud_Path + '</td>' +
-                    '<td>' + entry.Designation + '</td>' +
-                    '<td>' + entry.ENC_Algorithm + '</td>' +
-                    '<td>' + entry.ENC_ID + '</td>' +
-                    '<td>' + entry.File_Name + '</td>' +
-                    '<td>' + entry.File_Size + '</td>' +
-                    '<td>' + entry.Type + '</td>' +
-                    '<td>' + (entry.Tag || '') + '</td>' +
-                    '<td>' +
-                    '  <button class="edit-btn" data-key="' + entry.key + '">编辑</button>' +
-                    '  <button class="delete-btn btn-danger" data-key="' + entry.key + '">删除</button>' +
-                    '</td>';
+                row.setAttribute('data-key', entry.key);
+                row.innerHTML = '<td class="edit-field" data-field="Num">' + entry.Num + '</td>' +
+                  '<td class="edit-field" data-field="Time">' + (entry.Time || '') + '</td>' +
+                  '<td class="edit-field" data-field="Cloud_Path">' + entry.Cloud_Path + '</td>' +
+                  '<td class="edit-field" data-field="Designation">' + entry.Designation + '</td>' +
+                  '<td class="edit-field" data-field="ENC_Algorithm">' + entry.ENC_Algorithm + '</td>' +
+                  '<td class="edit-field" data-field="ENC_ID">' + entry.ENC_ID + '</td>' +
+                  '<td class="edit-field" data-field="File_Name">' + entry.File_Name + '</td>' +
+                  '<td class="edit-field" data-field="File_Size">' + entry.File_Size + '</td>' +
+                  '<td class="edit-field" data-field="Type">' + entry.Type + '</td>' +
+                  '<td class="edit-field" data-field="Tag">' + (entry.Tag || '') + '</td>' +
+                  '<td class="edit-field" data-field="Password">' + (entry.Password || '') + '</td>' +
+                  '<td>' +
+                  '  <button class="edit-btn" data-key="' + entry.key + '">编辑</button>' +
+                  '  <button class="delete-btn btn-danger" data-key="' + entry.key + '">删除</button>' +
+                  '  <button class="save-btn hidden btn-primary" data-key="' + entry.key + '">保存</button>' +
+                  '  <button class="cancel-btn hidden" data-key="' + entry.key + '">取消</button>' +
+                  '</td>';
                 tableBody.appendChild(row);
               });
               
               // 绑定编辑按钮事件
               document.querySelectorAll('.edit-btn').forEach(btn => {
-                btn.addEventListener('click', async (e) => {
+                btn.addEventListener('click', (e) => {
                   const key = e.target.getAttribute('data-key');
-                  await loadEntryForEdit(key);
+                  enterEditMode(key);
                 });
               });
               
@@ -855,6 +1029,22 @@ function generateAdminInterface() {
                   }
                 });
               });
+              
+              // 绑定保存按钮事件
+              document.querySelectorAll('.save-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                  const key = e.target.getAttribute('data-key');
+                  await saveRowEdit(key);
+                });
+              });
+              
+              // 绑定取消按钮事件
+              document.querySelectorAll('.cancel-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                  const key = e.target.getAttribute('data-key');
+                  exitEditMode(key);
+                });
+              });
             }
           } catch (error) {
             console.error('加载数据失败:', error);
@@ -862,34 +1052,202 @@ function generateAdminInterface() {
           }
         }
         
-        // 加载条目进行编辑
-        async function loadEntryForEdit(key) {
+        // 页面加载时设置排序和检查登录状态
+        window.addEventListener('load', () => {
+          setupSorting();
+          checkLoginStatus();
+          
+          // 绑定搜索按钮事件
+          document.getElementById('search-button').addEventListener('click', performSearch);
+          
+          // 绑定搜索框回车事件
+          document.getElementById('search-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+              performSearch();
+            }
+          });
+          
+          // 绑定清除搜索按钮事件
+          document.getElementById('clear-search-button').addEventListener('click', clearSearch);
+        });
+        
+        // 当前正在编辑的行的key
+        let currentEditingKey = null;
+        
+        // 进入编辑模式
+        async function enterEditMode(key) {
+          // 如果已经有行在编辑中，则取消之前的编辑
+          if (currentEditingKey && currentEditingKey !== key) {
+            exitEditMode(currentEditingKey);
+          }
+          
+          // 获取行元素
+          const row = document.querySelector('tr[data-key="' + key + '"]');
+          if (!row) return;
+          
+          // 获取条目的原始数据，用于取消编辑时恢复
           try {
             const response = await fetch('/api/entry/' + key);
             const entry = await response.json();
             
             if (entry) {
-              document.getElementById('edit-key').value = key;
-              document.getElementById('edit-Num').value = entry.Num;
-              document.getElementById('edit-Cloud_Path').value = entry.Cloud_Path || '';
-              document.getElementById('edit-Designation').value = entry.Designation || '';
-              document.getElementById('edit-ENC_Algorithm').value = entry.ENC_Algorithm || 'VENC-AES-GCM256bit';
-              document.getElementById('edit-ENC_ID').value = entry.ENC_ID || '';
-              document.getElementById('edit-File_Name').value = entry.File_Name || '';
-              document.getElementById('edit-File_Size').value = entry.File_Size || '';
-              document.getElementById('edit-Password').value = entry.Password || '';
-              document.getElementById('edit-Type').value = entry.Type || '';
-              document.getElementById('edit-Tag').value = entry.Tag || '';
+              // 保存原始数据到行元素
+              row.setAttribute('data-original-data', JSON.stringify(entry));
               
-              document.getElementById('save-success').classList.add('hidden');
-              document.getElementById('save-error').classList.add('hidden');
-              document.getElementById('edit-form').classList.remove('hidden');
+              // 将单元格内容转换为输入框
+              const fields = row.querySelectorAll('.edit-field');
+              fields.forEach(cell => {
+                const field = cell.getAttribute('data-field');
+                const value = cell.textContent;
+                
+                if (field === 'Num') {
+                  // Num字段只读
+                  cell.innerHTML = value;
+                } else {
+                  // 其他字段可编辑
+                  cell.innerHTML = '<input type="text" value="' + escapeHtml(value) + '" data-field="' + field + '">';
+                }
+              });
+              
+              // 切换按钮显示
+              row.querySelector('.edit-btn').classList.add('hidden');
+              row.querySelector('.delete-btn').classList.add('hidden');
+              row.querySelector('.save-btn').classList.remove('hidden');
+              row.querySelector('.cancel-btn').classList.remove('hidden');
+              
+              // 标记当前编辑的行
+              currentEditingKey = key;
             }
           } catch (error) {
-            console.error('加载条目失败:', error);
-            alert('加载条目失败，请重试');
+            console.error('进入编辑模式失败:', error);
+            alert('进入编辑模式失败，请重试');
           }
         }
+        
+        // 退出编辑模式（取消编辑）
+        function exitEditMode(key) {
+          const row = document.querySelector('tr[data-key="' + key + '"]');
+          if (!row) return;
+          
+          try {
+            // 获取保存的原始数据
+            const originalData = JSON.parse(row.getAttribute('data-original-data'));
+            
+            // 恢复单元格内容
+            const fields = row.querySelectorAll('.edit-field');
+            fields.forEach(cell => {
+              const field = cell.getAttribute('data-field');
+              cell.textContent = originalData[field] || '';
+            });
+            
+            // 移除保存的原始数据
+            row.removeAttribute('data-original-data');
+          } catch (error) {
+            console.error('恢复原始数据失败:', error);
+          }
+          
+          // 切换按钮显示
+          row.querySelector('.edit-btn').classList.remove('hidden');
+          row.querySelector('.delete-btn').classList.remove('hidden');
+          row.querySelector('.save-btn').classList.add('hidden');
+          row.querySelector('.cancel-btn').classList.add('hidden');
+          
+          // 清除当前编辑的行标记
+          currentEditingKey = null;
+        }
+        
+        // 保存行编辑
+        async function saveRowEdit(key) {
+          const row = document.querySelector('tr[data-key="' + key + '"]');
+          if (!row) return;
+          
+          // 收集编辑后的数据
+          const data = {};
+          const inputs = row.querySelectorAll('input[data-field]');
+          inputs.forEach(input => {
+            const field = input.getAttribute('data-field');
+            data[field] = input.value || '';
+          });
+          
+          // 添加Num字段（不可编辑，但需要保留）
+          const numCell = row.querySelector('.edit-field[data-field="Num"]');
+          data.Num = numCell.textContent;
+          
+          try {
+            // 发送保存请求
+            const response = await fetch('/api/update/' + key, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(data)
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+              // 保存成功后重新加载数据
+              loadData();
+              currentEditingKey = null;
+            } else {
+              alert(result.message || '保存失败');
+            }
+          } catch (error) {
+            console.error('保存失败:', error);
+            alert('保存失败，请重试');
+          }
+        }
+        
+        // HTML转义函数
+        function escapeHtml(text) {
+          const div = document.createElement('div');
+          div.textContent = text;
+          return div.innerHTML;
+        }
+        
+        // 刷新按钮
+        document.getElementById('refresh-button').addEventListener('click', loadData);
+        
+        // 创建新条目按钮
+        document.getElementById('create-button').addEventListener('click', async () => {
+          try {
+            // 创建一个新条目
+            const response = await fetch('/api/create', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                Cloud_Path: 'OTTC',
+                Designation: '',
+                ENC_Algorithm: 'VENC-AES-GCM256bit',
+                ENC_ID: '',
+                File_Name: '',
+                File_Size: '',
+                Password: '',
+                Type: 'TAV',
+                Tag: ''
+              })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+              // 创建成功后重新加载数据并进入编辑模式
+              await loadData();
+              // 查找新创建的条目（通常是Num最大的那个）
+              setTimeout(() => {
+                const entries = document.querySelectorAll('tr[data-key]');
+                if (entries.length > 0) {
+                  const lastEntry = entries[entries.length - 1];
+                  const key = lastEntry.getAttribute('data-key');
+                  enterEditMode(key);
+                }
+              }, 500);
+            } else {
+              alert(result.message || '创建失败');
+            }
+          } catch (error) {
+            console.error('创建新条目失败:', error);
+            alert('创建新条目失败，请重试');
+          }
+        });
         
         // 删除条目
         async function deleteEntry(key) {
@@ -910,9 +1268,344 @@ function generateAdminInterface() {
             alert('删除条目失败，请重试');
           }
         }
+        
+        // 导出数据
+        document.getElementById('export-button').addEventListener('click', async () => {
+          try {
+            const response = await fetch('/api/export', {
+              method: 'GET'
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+              // 创建下载链接并触发下载
+              const blob = new Blob([JSON.stringify(result.data, null, 2)], { type: 'application/json' });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'venc_export_' + new Date().toISOString().slice(0,10) + '.json';
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              URL.revokeObjectURL(url);
+            } else {
+              alert(result.message || '导出失败');
+            }
+          } catch (error) {
+            console.error('导出数据失败:', error);
+            alert('导出数据失败，请重试');
+          }
+        });
+        
+        // 清空键值按钮事件
+        document.getElementById('clear-all-button').addEventListener('click', () => {
+          showPasswordDialog('clearAll');
+        });
+        
+        // 显示密码验证对话框
+        function showPasswordDialog(action) {
+          // 检查密码对话框是否已存在，如果不存在则创建
+          let dialog = document.getElementById('password-dialog');
+          if (!dialog) {
+            dialog = document.createElement('div');
+            dialog.id = 'password-dialog';
+            dialog.className = 'password-dialog hidden';
+            dialog.innerHTML = 
+              '<div class="password-dialog-content">' +
+              '  <h3>管理员密码验证</h3>' +
+              '  <input type="password" id="verify-password" placeholder="请输入管理员密码">' +
+              '  <div id="verify-error" class="error-message hidden"></div>' +
+              '  <div class="password-dialog-buttons">' +
+              '    <button id="verify-cancel">取消</button>' +
+              '    <button id="verify-confirm" class="btn-primary">确认</button>' +
+              '  </div>' +
+              '</div>';
+            document.body.appendChild(dialog);
+            
+            // 绑定对话框按钮事件
+            document.getElementById('verify-cancel').addEventListener('click', () => {
+              dialog.classList.add('hidden');
+              document.getElementById('verify-password').value = '';
+              document.getElementById('verify-error').classList.add('hidden');
+            });
+            
+            document.getElementById('verify-confirm').addEventListener('click', async () => {
+              const password = document.getElementById('verify-password').value;
+              const errorDiv = document.getElementById('verify-error');
+              
+              try {
+                // 验证密码
+                const response = await fetch('/api/auth', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ password })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                  // 密码验证成功，执行相应操作
+                  if (action === 'clearAll') {
+                    await clearAllEntries();
+                  }
+                  
+                  dialog.classList.add('hidden');
+                  document.getElementById('verify-password').value = '';
+                  errorDiv.classList.add('hidden');
+                } else {
+                  errorDiv.textContent = '密码错误，请重试';
+                  errorDiv.classList.remove('hidden');
+                }
+              } catch (error) {
+                errorDiv.textContent = '验证失败，请重试';
+                errorDiv.classList.remove('hidden');
+              }
+            });
+          }
+          
+          // 显示对话框
+          dialog.classList.remove('hidden');
+        }
+        
+        // 清空所有条目
+        async function clearAllEntries() {
+          if (!confirm('警告：此操作将删除所有数据，且无法恢复。确定要继续吗？')) {
+            return;
+          }
+          
+          try {
+            const response = await fetch('/api/clear-all', {
+              method: 'DELETE'
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+              alert('所有数据已清空');
+              loadData(); // 清空后重新加载数据
+            } else {
+              alert(result.message || '清空失败');
+            }
+          } catch (error) {
+            console.error('清空数据失败:', error);
+            alert('清空数据失败，请重试');
+          }
+        }
+        
+        // 导入数据
+        document.getElementById('import-button').addEventListener('click', () => {
+          document.getElementById('import-file').click();
+        });
+        
+        document.getElementById('import-file').addEventListener('change', async (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+          
+          try {
+            // 验证文件类型
+            if (!file.name.endsWith('.json')) {
+              alert('请选择JSON格式的文件');
+              e.target.value = ''; // 重置文件选择
+              return;
+            }
+            
+            // 读取文件内容
+            const reader = new FileReader();
+            reader.onload = async (event) => {
+              try {
+                const jsonData = JSON.parse(event.target.result);
+                
+                // 发送导入请求
+                const response = await fetch('/api/import', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(jsonData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                  alert(result.message);
+                  loadData(); // 导入成功后重新加载数据
+                } else {
+                  alert(result.message || '导入失败');
+                }
+              } catch (error) {
+                alert('JSON解析错误: ' + error.message);
+              }
+            };
+            reader.readAsText(file);
+          } catch (error) {
+            console.error('导入数据失败:', error);
+            alert('导入数据失败，请重试');
+          } finally {
+            e.target.value = ''; // 重置文件选择
+          }
+        });
       </script>
     </body>
     </html>`;
+}
+
+// 导出数据功能
+async function exportData() {
+  try {
+    const entries = await getAllEntries();
+    return { success: true, data: entries };
+  } catch (error) {
+    console.error('导出数据失败:', error);
+    return { success: false, message: '导出失败', error: error.message };
+  }
+}
+
+// 导入数据功能
+async function importData(jsonData) {
+  try {
+    console.log('开始导入数据，数据类型:', typeof jsonData, '数据长度:', jsonData ? (Array.isArray(jsonData) ? jsonData.length : '非数组') : 'null');
+    
+    // 确保导入的数据是数组格式
+    if (!Array.isArray(jsonData)) {
+      throw new Error('导入的数据必须是JSON数组格式');
+    }
+
+    const importedKeys = [];
+    const skippedKeys = [];
+
+    // 首先获取所有已存在的键，用于验证
+    const entries = await getAllEntries();
+    const existingKeys = new Set(entries.map(entry => entry.key));
+    
+    console.log('现有条目数量:', entries.length);
+    
+    // 定义有效的系统键结构
+    const validKeys = ['Cloud_Path', 'Designation', 'ENC_Algorithm', 'ENC_ID', 'File_Name', 'File_Size', 'Password', 'Type', 'Tag'];
+
+    // 预先获取下一个可用的Num值
+    let nextNum = await generateNextNum();
+    console.log('初始下一个Num值:', nextNum);
+
+    // 处理每个导入的条目
+    for (let i = 0; i < jsonData.length; i++) {
+      const item = jsonData[i];
+      
+      try {
+        console.log(`处理第${i+1}条数据:`, item ? '有数据' : '空数据');
+        
+        // 检查条目是否为对象
+        if (!item || typeof item !== 'object') {
+          skippedKeys.push(`第${i+1}条 (非对象)`);
+          console.log(`跳过第${i+1}条数据: 非对象`);
+          continue;
+        }
+
+        // 检查是否有导入的key，如果没有则自动生成
+        let itemKey = item.key;
+        let isNewEntry = false;
+        let currentNum = nextNum; // 为当前条目分配Num值
+        
+        if (!itemKey) {
+          // 自动生成新的key
+          itemKey = `ENTRY_${currentNum}`;
+          isNewEntry = true;
+          console.log(`自动生成新key: ${itemKey} (Num: ${currentNum})`);
+          nextNum++; // 为下一条目准备Num值
+        } else if (!existingKeys.has(itemKey)) {
+          // 提供了key但不存在，视为新条目
+          isNewEntry = true;
+          console.log(`提供的key不存在，视为新条目: ${itemKey} (Num: ${currentNum})`);
+          nextNum++; // 为下一条目准备Num值
+        }
+
+        // 构建数据对象
+        const entryData = {};
+        
+        // 检查key是否已存在
+        if (existingKeys.has(itemKey)) {
+          // 现有条目，先获取现有数据
+          const existingEntry = entries.find(entry => entry.key === itemKey);
+          if (existingEntry) {
+            // 复制现有条目的所有字段（不包括key）
+            for (const key in existingEntry) {
+              if (key !== 'key') {
+                entryData[key] = existingEntry[key];
+              }
+            }
+          }
+          // 保留现有时间戳
+          if (entryData.Time) {
+            console.log(`保留现有时间戳: ${entryData.Time}`);
+          }
+        } else {
+          // 新条目，设置默认值
+          entryData.ENC_Algorithm = 'VENC-AES-GCM256bit';
+          entryData.Type = 'TAV';
+          entryData.Time = generateBeijingTime();
+          console.log(`创建新条目: ${itemKey}`);
+        }
+
+        // 确保Num字段始终存在且由系统生成
+        if (!entryData.Num) {
+          entryData.Num = currentNum;
+          console.log(`设置Num: ${currentNum} 用于 ${itemKey}`);
+        }
+
+        // 更新有效字段（如果有数据且不为undefined）
+        for (const key of validKeys) {
+          if (key in item && item[key] !== undefined) {
+            entryData[key] = item[key];
+            console.log(`更新字段 ${key}: ${item[key]}`);
+          } else if (isNewEntry) {
+            // 新条目，确保没有值的字段为空字符串
+            entryData[key] = '';
+          }
+        }
+
+        console.log('准备写入KV的数据:', JSON.stringify(entryData));
+        
+        // 保存条目
+        try {
+          await VENC_KV_NAMESPACE.put(itemKey, JSON.stringify(entryData));
+          importedKeys.push(itemKey);
+          console.log('成功写入条目:', itemKey, isNewEntry ? '(新条目)' : '(更新条目)');
+        } catch (kvError) {
+          console.error('写入KV失败，键:', itemKey, '错误:', kvError);
+          skippedKeys.push(itemKey + ' (写入失败: ' + kvError.message + ')');
+        }
+      } catch (itemError) {
+        console.error(`处理第${i+1}条数据时出错:`, itemError);
+        skippedKeys.push(`第${i+1}条 (处理错误: ${itemError.message})`);
+      }
+    }
+
+    console.log(`导入完成: 成功${importedKeys.length}条，跳过${skippedKeys.length}条`);
+    
+    return {
+      success: true,
+      message: `成功导入 ${importedKeys.length} 条数据，跳过 ${skippedKeys.length} 条无效的数据`,
+      importedKeys: importedKeys,
+      skippedKeys: skippedKeys
+    };
+  } catch (error) {
+    console.error('导入数据失败:', error);
+    return { success: false, message: '导入失败', error: error.message };
+  }
+}
+
+// 清空所有 KV 条目
+async function clearAllEntries() {
+  try {
+    const list = await VENC_KV_NAMESPACE.list({ prefix: 'ENTRY_' });
+    
+    // 批量删除所有条目
+    const deletePromises = list.keys.map(key => VENC_KV_NAMESPACE.delete(key.name));
+    await Promise.all(deletePromises);
+    
+    return { success: true, message: '所有数据已清空' };
+  } catch (error) {
+    console.error('清空所有条目失败:', error);
+    return { success: false, message: '清空失败', error: error.message };
+  }
 }
 
 // 主处理函数
@@ -938,6 +1631,19 @@ async function handleRequest(request) {
     response.headers.set('Access-Control-Allow-Headers', 'Content-Type, X-API-Key');
     return response;
   };
+  
+  // 清空所有条目的端点
+  if (url.pathname === '/api/clear-all' && request.method === 'DELETE') {
+
+    
+    const result = await clearAllEntries();
+    
+    const response = new Response(JSON.stringify(result), {
+      status: result.success ? 200 : 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
+    return addCorsHeaders(response);
+  }
   
   // 健康检查端点 - 保留API密钥验证
   if (url.pathname === '/health') {
@@ -1135,6 +1841,63 @@ async function handleRequest(request) {
       return addCorsHeaders(response);
     }
   }
+  
+  // 导出数据API
+  if (url.pathname === '/api/export' && request.method === 'GET') {
+    const result = await exportData();
+    const response = new Response(JSON.stringify(result), {
+      status: result.success ? 200 : 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
+    return addCorsHeaders(response);
+  }
+  
+  // 导入数据 API 端点
+    if (url.pathname === '/api/import' && request.method === 'POST') {
+      try {
+        console.log('接收到导入数据请求');
+        
+        // 获取请求内容类型
+        const contentType = request.headers.get('content-type') || '';
+        let jsonData;
+        
+        // 处理不同格式的数据
+        if (contentType.includes('application/json')) {
+          try {
+            jsonData = await request.json();
+          } catch (jsonError) {
+            throw new Error('请求体不是有效的JSON格式');
+          }
+        } else {
+          throw new Error('不支持的内容类型，仅支持application/json');
+        }
+
+        console.log('导入数据解析成功，准备处理');
+        
+        // 调用导入数据函数处理导入
+        const result = await importData(jsonData);
+
+        console.log('导入处理完成，结果:', result.success ? '成功' : '失败');
+        
+        // 返回导入结果
+        const response = new Response(JSON.stringify(result), {
+          status: result.success ? 200 : 500,
+          headers: { 'Content-Type': 'application/json' }
+        });
+        return addCorsHeaders(response);
+      } catch (error) {
+        console.error('导入API端点错误:', error);
+        const response = new Response(JSON.stringify({ 
+          success: false, 
+          message: '导入失败', 
+          error: error.message 
+        }), {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' }
+        });
+        return addCorsHeaders(response);
+      }
+    }
   
   // 管理界面
   if (url.pathname === '/' || url.pathname === '/admin') {

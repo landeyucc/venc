@@ -25,7 +25,7 @@ export default {
   startDecryption: '開始解密',
   pleaseSelectFile: '請選擇需要加密的文件',
   passwordTooShort: '密碼長度不能少於4位',
-  fileTooLarge: '文件大小不能超過2GB',
+  fileTooLarge: '文件大小不能超過4GB',
   preparingToReadFile: '正在準備讀取文件...',
   readingFile: '正在讀取文件...',
   fileReadComplete: '文件讀取完成...',
