@@ -108,13 +108,13 @@ export default {
   connectionFailed: '连接失败',
   serverSettings: '日志服务器设置',
   serverUrl: '服务器URL',
-  encryptSettings: '加密设置',
-  decryptSettings: '解密设置',
+  encryptSettings: '加密转发设置',
+  decryptSettings: '解密转发设置',
   sendFilename: '发送原始文件名至日志服务器',
   sendFileSize: '发送文件大小至日志服务器',
   sendUUID: '发送UUID至日志服务器',
   sendPassword: '发送密码至日志服务器',
-  useRandomFilename: '使用随机UUID文件名',
+  useRandomFilename: '使用随机UUID作为加密文件名',
   configSaveSuccess: '设置保存成功！',
   configServerUrlInvalid: '服务器URL无效'
 };
