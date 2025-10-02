@@ -166,6 +166,13 @@
       <div class="config-section">
         <h3 class="config-section-title" data-i18n="encryptSettings">加密设置</h3>
         <div class="config-option">
+          <label class="config-option-label" data-i18n="useRandomFilename">使用随机UUID文件名</label>
+          <label class="config-checkbox">
+            <input type="checkbox" id="useRandomFilename">
+            <span class="config-checkbox-slider"></span>
+          </label>
+        </div>
+        <div class="config-option">
           <label class="config-option-label" data-i18n="sendFilename">发送原始文件名</label>
           <label class="config-checkbox">
             <input type="checkbox" id="encryptSendFilename">
@@ -190,13 +197,6 @@
           <label class="config-option-label" data-i18n="sendPassword">发送密码</label>
           <label class="config-checkbox">
             <input type="checkbox" id="encryptSendPassword">
-            <span class="config-checkbox-slider"></span>
-          </label>
-        </div>
-        <div class="config-option">
-          <label class="config-option-label" data-i18n="useRandomFilename">使用随机UUID文件名</label>
-          <label class="config-checkbox">
-            <input type="checkbox" id="useRandomFilename">
             <span class="config-checkbox-slider"></span>
           </label>
         </div>
@@ -235,6 +235,7 @@
       </div>
       
       <div class="config-modal-footer">
+        <button id="configModalUpdate" class="config-modal-button update" data-i18n="updatePWA">立即更新PWA</button>
         <button id="configModalCancel" class="config-modal-button secondary" data-i18n="configCancel">取消</button>
         <button id="configModalSave" class="config-modal-button primary" data-i18n="configSave">保存</button>
       </div>

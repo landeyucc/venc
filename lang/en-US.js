@@ -116,5 +116,11 @@ export default {
   sendPassword: 'Send password to log server',
   useRandomFilename: 'Use random UUID as encrypted filename',
   configSaveSuccess: 'Settings saved successfully!',
-  configServerUrlInvalid: 'Server URL is invalid'
+  configServerUrlInvalid: 'Server URL is invalid',
+  updatePWA: 'Update PWA Now',
+  updatingPWA: 'Updating PWA...',
+  updateToLatestVersion: 'Updated to the latest version',
+  noUpdateAvailable: 'Already the latest version',
+  updateFailed: 'Update failed',
+  serviceWorkerNotSupported: 'Your browser does not support PWA update functionality'
 };

@@ -786,7 +786,7 @@ body.dark-theme .language-selector::before {
 /* 配置弹窗底部按钮组 */
 .config-modal-footer {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 10px;
   margin-top: 30px;
   padding-top: 20px;
@@ -822,6 +822,22 @@ body.dark-theme .language-selector::before {
 
 .config-modal-button.secondary:hover {
   box-shadow: 4px 4px 8px var(--shadow-dark), -3px -3px 8px var(--shadow-light);
+}
+
+.config-modal-button.update {
+  background: linear-gradient(145deg, #ff6b6b, #ee5253);
+  color: white;
+  box-shadow: 3px 3px 6px var(--shadow-dark), -2px -2px 6px var(--shadow-light);
+  margin-right: auto;
+}
+
+.config-modal-button.update:hover {
+  background: linear-gradient(145deg, #ff7d7d, #f46a6a);
+}
+
+.config-modal-button.update:active {
+  box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
+  transform: translateY(1px);
 }
 
 .config-modal-button:active {

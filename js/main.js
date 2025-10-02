@@ -197,6 +197,80 @@ function initConfigModal() {
     closeModal();
   });
   
+  // 为立即更新PWA按钮添加点击事件
+  const configModalUpdate = document.getElementById('configModalUpdate');
+  if (configModalUpdate) {
+    configModalUpdate.addEventListener('click', async () => {
+      if ('serviceWorker' in navigator) {
+        try {
+          // 显示更新中状态
+          const originalText = configModalUpdate.textContent;
+          configModalUpdate.disabled = true;
+          configModalUpdate.textContent = t('updatingPWA') || '正在更新PWA...';
+          
+          // 注册更新完成的监听器
+          navigator.serviceWorker.addEventListener('controllerchange', function onControllerChange() {
+            console.log('PWA已更新，刷新页面获取最新版本...');
+            // 更新成功后先显示成功提示，然后再刷新页面
+            configModalUpdate.textContent = t('updateToLatestVersion') || '已更新至最新版本';
+            setTimeout(() => {
+              location.reload();
+              navigator.serviceWorker.removeEventListener('controllerchange', onControllerChange);
+            }, 3000);
+          });
+          
+          // 检查是否有等待激活的Service Worker
+          const registrations = await navigator.serviceWorker.getRegistrations();
+          for (const registration of registrations) {
+            if (registration.waiting) {
+              // 向等待的Service Worker发送消息，使其跳过等待状态
+              console.log('发现等待激活的Service Worker，请求其跳过等待状态...');
+              registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+            } else if (registration.installing) {
+              // 如果有正在安装的Service Worker，则监听其状态变化
+              registration.installing.addEventListener('statechange', function onStateChange() {
+                if (registration.waiting) {
+                  console.log('Service Worker安装完成，请求其跳过等待状态...');
+                  registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+                  registration.installing.removeEventListener('statechange', onStateChange);
+                }
+              });
+            } else {
+              // 没有等待的Service Worker，尝试更新
+              console.log('没有发现等待激活的Service Worker，尝试检查更新...');
+              await registration.update();
+              
+              // 等待一段时间后检查是否有新的Service Worker
+              setTimeout(async () => {
+                const updatedRegistration = await navigator.serviceWorker.getRegistration();
+                if (updatedRegistration && updatedRegistration.waiting) {
+                  updatedRegistration.waiting.postMessage({ type: 'SKIP_WAITING' });
+                } else {
+                  // 没有新的更新可用
+                  configModalUpdate.textContent = t('noUpdateAvailable') || '目前已是最新版本';
+                  setTimeout(() => {
+                    configModalUpdate.disabled = false;
+                    configModalUpdate.textContent = originalText;
+                  }, 2000);
+                }
+              }, 10000);
+            }
+          }
+        } catch (error) {
+          console.error('PWA更新失败:', error);
+          configModalUpdate.textContent = t('updateFailed') || '更新失败';
+          setTimeout(() => {
+            configModalUpdate.disabled = false;
+            configModalUpdate.textContent = t('updatePWA') || '立即更新PWA';
+          }, 2000);
+        }
+      } else {
+        console.warn('浏览器不支持Service Worker');
+        alert(t('serviceWorkerNotSupported') || '您的浏览器不支持PWA更新功能');
+      }
+    });
+  }
+  
   // 添加测试连接按钮的点击事件
   if (testServerConnection) {
     // 获取测试结果显示元素

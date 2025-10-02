@@ -116,5 +116,11 @@ export default {
   sendPassword: '发送密码至日志服务器',
   useRandomFilename: '使用随机UUID作为加密文件名',
   configSaveSuccess: '设置保存成功！',
-  configServerUrlInvalid: '服务器URL无效'
+  configServerUrlInvalid: '服务器URL无效',
+  updatePWA: '立即更新PWA',
+  updatingPWA: '正在更新PWA...',
+  updateToLatestVersion: '已更新至最新版本',
+  noUpdateAvailable: '目前已是最新版本',
+  updateFailed: '更新失败',
+  serviceWorkerNotSupported: '您的浏览器不支持PWA更新功能'
 };

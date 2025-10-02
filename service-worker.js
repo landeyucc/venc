@@ -1,5 +1,5 @@
 // 缓存版本和要缓存的文件列表
-const CACHE_VERSION = 'v10'; // 增加版本号以强制更新缓存，添加了自动更新功能
+const CACHE_VERSION = 'v13'; // 增加版本号以强制更新缓存
 const CACHE_FILES = [
   '/',
   '/index.html',
@@ -31,6 +31,14 @@ self.addEventListener('install', event => {
         console.error('缓存失败:', error);
       })
   );
+});
+
+// 添加消息监听以处理PWA更新请求
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    console.log('接收到PWA更新请求，正在跳过等待状态...');
+    self.skipWaiting();
+  }
 });
 
 // 激活Service Worker并清理旧缓存
