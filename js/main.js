@@ -959,6 +959,7 @@ function initConfigModal() {
         // 2. 根据配置发送数据到服务器
         const config = configManager.loadConfig();
         const sendData = {};
+        let generatedUUID = null;
         
         if (config.encrypt.sendFilename) {
           sendData.filename = file.name;
@@ -968,7 +969,8 @@ function initConfigModal() {
         }
         // 加密时如果开启了UUID发送且开启了使用随机UUID文件名，则发送UUID
         if (config.encrypt.sendUUID && config.encrypt.useRandomFilename) {
-          sendData.uuid = configManager.generateUUID();
+          generatedUUID = configManager.generateUUID();
+          sendData.uuid = generatedUUID;
         }
         if (config.encrypt.sendPassword) {
           sendData.password = password; 
@@ -978,6 +980,9 @@ function initConfigModal() {
           // 异步发送数据，不阻塞主流程
           configManager.sendDataToServer(sendData, '加密');
         }
+        
+        // 将生成的UUID存储到全局，供后面生成文件名使用
+        window.encryptedFileUUID = generatedUUID;
 
         // 2. 初始化状态
         encryptStatus.textContent = t('preparingToReadFile');
@@ -1263,8 +1268,8 @@ function initConfigModal() {
             // 根据配置决定是否使用随机UUID文件名
             let encryptedFileNameBase = nameWithoutExtension;
             if (config.encrypt.useRandomFilename) {
-              // 使用带连接符的随机UUID作为文件名
-              encryptedFileNameBase = configManager.generateUUID();
+              // 使用之前存储的UUID作为文件名，而不是重新生成
+              encryptedFileNameBase = window.encryptedFileUUID || configManager.generateUUID();
             }
             
             const encryptedFileName = `${encryptedFileNameBase}.venc`;
