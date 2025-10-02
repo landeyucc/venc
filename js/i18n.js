@@ -144,13 +144,6 @@ export function applyTranslations() {
     document.getElementById('pageTitle').textContent = t('appTitle');
   }
   
-  // 翻译页脚（保持不变，不被修改）
-  if (document.querySelector('.footer p')) {
-    // 使用英文作为默认语言，确保页脚不被修改
-    const footerText = '&copy; {{year}} Github@landeyucc. Powered by <a href="https://coldsea.vip/" target="_blank" title="ColdSea Team">ColdSea Team</a>';
-    document.querySelector('.footer p').innerHTML = footerText.replace('{{year}}', new Date().getFullYear());
-  }
-  
   // 确保语言选择器为空，只显示图标
   if (document.getElementById('languageSelector')) {
     document.getElementById('languageSelector').innerHTML = '';
