@@ -42,7 +42,7 @@ A simple, efficient browser-based file encryption and protection tool that suppo
 ## Quick Start
 
 ### Online Use
-Directly visit the [VENC File Protection](https://venc.vl-x.vip/) website to start using it.
+Directly visit the [VENC](https://venc.isea.dev/) website to start using it.
 
 ### Local Deployment
 1. Clone the repository
