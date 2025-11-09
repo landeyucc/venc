@@ -865,7 +865,7 @@ function initConfigModal() {
       if (decryptDownloadArea && document.getElementById("decryptCard")) {
         document.getElementById("decryptCard").removeChild(decryptDownloadArea);
       }
-      // 清理解密相关的缓存
+      // 清解密相关的缓存
       cacheManager.clearByTag("decrypt");
     }
     // 清理所有缓存
@@ -1420,76 +1420,76 @@ function initConfigModal() {
   function initAutoUpdate() {
     if ('serviceWorker' in navigator) {
       // 页面加载时主动检查Service Worker更新
-      registerServiceWorker();
+      // registerServiceWorker(); // PWA功能已移除
       
       // 设置定期检查更新（每10分钟）
-      updateInterval = setInterval(() => {
-        checkForUpdates();
-      }, 10 * 60 * 1000);
+      // updateInterval = setInterval(() => {
+      //   checkForUpdates();
+      // }, 10 * 60 * 1000);
       
       // 在页面可见性变化时也检查更新
-      document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') {
-          checkForUpdates();
-        }
-      });
+      // document.addEventListener('visibilitychange', () => {
+      //   if (document.visibilityState === 'visible') {
+      //     checkForUpdates();
+      //   }
+      // });
     }
   }
   
   // 注册Service Worker
-  function registerServiceWorker() {
-    navigator.serviceWorker.register('service-worker.js').then(registration => {
-      console.log('Service Worker已注册');
-      
-      // 监听更新事件
-      registration.addEventListener('updatefound', () => {
-        console.log('发现新的Service Worker版本');
-        const installingWorker = registration.installing;
-        if (installingWorker) {
-          installingWorker.addEventListener('statechange', () => {
-            if (installingWorker.state === 'installed') {
-              console.log('Service Worker已安装完成');
-              if (navigator.serviceWorker.controller) {
-                // 有新版本可用
-                console.log('检测到新版本');
-                showUpdateNotification();
-              }
-            }
-          });
-        }
-      });
-    }).catch(error => {
-      console.error('Service Worker注册失败:', error);
-    });
-    
-    // 监听来自Service Worker的消息
-    navigator.serviceWorker.addEventListener('message', event => {
-      if (event.data && event.data.type === 'CACHE_UPDATED') {
-        console.log('收到缓存更新通知');
-        showUpdateNotification();
-      }
-    });
-    
-    // 页面加载后立即检查是否有等待激活的Service Worker
-    navigator.serviceWorker.ready.then(registration => {
-      if (registration.waiting) {
-        console.log('有等待激活的Service Worker版本');
-        showUpdateNotification();
-      }
-    });
-  }
+  // function registerServiceWorker() {
+  //   navigator.serviceWorker.register('service-worker.js').then(registration => {
+  //     console.log('Service Worker已注册');
+  //     
+  //     // 监听更新事件
+  //     registration.addEventListener('updatefound', () => {
+  //       console.log('发现新的Service Worker版本');
+  //       const installingWorker = registration.installing;
+  //       if (installingWorker) {
+  //         installingWorker.addEventListener('statechange', () => {
+  //           if (installingWorker.state === 'installed') {
+  //             console.log('Service Worker已安装完成');
+  //             if (navigator.serviceWorker.controller) {
+  //               // 有新版本可用
+  //               console.log('检测到新版本');
+  //               showUpdateNotification();
+  //             }
+  //           }
+  //         });
+  //       }
+  //     });
+  //   }).catch(error => {
+  //     console.error('Service Worker注册失败:', error);
+  //   });
+  //   
+  //   // 监听来自Service Worker的消息
+  //   navigator.serviceWorker.addEventListener('message', event => {
+  //     if (event.data && event.data.type === 'CACHE_UPDATED') {
+  //       console.log('收到缓存更新通知');
+  //       showUpdateNotification();
+  //     }
+  //   });
+  //   
+  //   // 页面加载后立即检查是否有等待激活的Service Worker
+  //   navigator.serviceWorker.ready.then(registration => {
+  //     if (registration.waiting) {
+  //       console.log('有等待激活的Service Worker版本');
+  //       showUpdateNotification();
+  //     }
+  //   });
+  // }
   
   // 检查更新
-  function checkForUpdates() {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.ready.then(registration => {
-        // 强制检查更新
-        registration.update().then(() => {
-          console.log('已检查Service Worker更新');
-        });
-      });
-    }
-  }
+  // function checkForUpdates() {
+  //   if ('serviceWorker' in navigator) {
+  //     navigator.serviceWorker.ready.then(registration => {
+  //       // 强制检查更新
+  //       registration.update().then(() => {
+  //         console.log('已检查Service Worker更新');
+  //       });
+  //     });
+  //   }
+  // }
   
   // 显示更新通知UI
   function showUpdateNotification() {
@@ -1676,7 +1676,7 @@ function initConfigModal() {
       }
     }
     
-    // 清理解密相关的缓存
+    // 清解密相关的缓存
     cacheManager.clearByTag(module);
   }
 }); // 结束DOMContentLoaded事件监听器

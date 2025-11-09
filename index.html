@@ -1,21 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-CN"> 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title id="pageTitle" data-i18n="appTitle">VENC文件保护</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="shortcut icon" href="img/venc.ico" type="image/x-icon" sizes="48x48">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- PWA 支持 -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#4CAF50">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="VENC">
-  <link rel="apple-touch-icon" href="img/venc.ico">
-  <meta name="application-name" content="VENC">
-  <meta name="mobile-web-app-capable" content="yes">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle" data-i18n="appTitle">VENC文件保护</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="shortcut icon" href="img/venc.ico" type="image/x-icon" sizes="48x48">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
   <div class="container">
@@ -130,21 +121,6 @@
   <!-- 语言选择器 -->
   <div id="languageSelector" class="language-selector"></div>
   
-  <!-- 注册Service Worker -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js')
-          .then(registration => {
-            console.log('Service Worker 注册成功:', registration.scope);
-          })
-          .catch(error => {
-            console.error('Service Worker 注册失败:', error);
-          });
-      });
-    }
-  </script>
-  
   <!-- 配置弹窗 -->
   <div id="configModal" class="config-modal">
     <div class="config-modal-content">
@@ -235,14 +211,13 @@
       </div>
       
       <div class="config-modal-footer">
-        <button id="configModalUpdate" class="config-modal-button update" data-i18n="updatePWA">立即更新PWA</button>
         <button id="configModalCancel" class="config-modal-button secondary" data-i18n="configCancel">取消</button>
         <button id="configModalSave" class="config-modal-button primary" data-i18n="configSave">保存</button>
       </div>
     </div>
   </div>
-    
-    </div> 
-  </div> 
-</body>
-</html>
+      
+        </div> 
+      </div> 
+    </body>
+    </html>
