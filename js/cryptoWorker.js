@@ -46,7 +46,7 @@ async function generateFileKey() {
 
 // 使用PBKDF2派生密钥加密密钥(KEK)
 async function deriveKek(password, salt) {
-  // 注意：这里使用VENCLITE作为vkey标识符，确保vkey文件可以独立使用
+  // 注意：这里使用VENCRKEY作为vkey标识符，确保vkey文件可以独立使用
   const passwordData = new TextEncoder().encode(password || 'VENCRKEY');
   const importedKey = await crypto.subtle.importKey(
     'raw',
