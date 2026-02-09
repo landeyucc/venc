@@ -1,13 +1,16 @@
 <!DOCTYPE html>
-<html lang="zh-CN"> 
+<html lang="zh-CN">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle" data-i18n="appTitle">VENC文件保护</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="shortcut icon" href="img/venc.ico" type="image/x-icon" sizes="48x48">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle" data-i18n="appTitle">VENC文件保护</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="shortcut icon" href="img/venc.ico" type="image/x-icon" sizes="48x48">
+  <link rel="stylesheet" href="https://files-plus.coldsea.vip/spcoreapi/fonts/frizon.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
   <div class="container">
     <!-- 左侧标题区域 -->
@@ -18,206 +21,212 @@
       <h1 class="title" data-i18n="title">VENC</h1>
       <button id="configButton" class="config-button" data-i18n="configuration">配置</button>
     </div>
-    
+
     <!-- 垂直分割线 -->
     <div class="divider"></div>
-    
+
     <!-- 右侧主体内容区域 -->
     <div class="right-panel">
       <div class="card">
-    <!-- 模式切换器 -->
-    <div class="mode-switch">
-      <button class="switch-btn active" id="encryptModeBtn" data-i18n="encrypt">加密</button>
-      <button class="switch-btn" id="decryptModeBtn" data-i18n="decrypt">解密</button>
-    </div>
+        <!-- 模式切换器 -->
+        <div class="mode-switch">
+          <button class="switch-btn active" id="encryptModeBtn" data-i18n="encrypt">加密</button>
+          <button class="switch-btn" id="decryptModeBtn" data-i18n="decrypt">解密</button>
+        </div>
 
-    <!-- 卡片内容容器 -->
-    <div class="card-content-container">
-      <!-- 加密模块 -->
-      <div id="encryptCard">
-        <h2 class="card-title" data-i18n="fileEncryption">文件加密</h2>
-        <div class="form-group">
-          <label class="label" for="encryptFile" data-i18n="selectFileToEncrypt">选择需要加密的文件</label>
-          <input type="file" id="encryptFile" class="file-input" accept="*">
-        </div>
-        <div class="form-group">
-          <label class="label" for="encryptPwd" data-i18n="setEncryptionPassword">设置加密密码</label>
-          <input type="password" id="encryptPwd" class="input" placeholder="请输入至少4位以上密码" data-i18n-placeholder="placeholderPassword">
-        </div>
-        <div class="progress-container">
-          <div class="progress" id="encryptProgress"></div>
-        </div>
-        <div class="status" id="encryptStatus"></div>
-        <div class="btn-group">
-          <button class="btn btn-primary" id="startEncrypt">
-            <span class="icon icon-primary"></span> <span data-i18n="startEncryption">开始加密</span>
-          </button>
-          <button class="btn" id="clearEncrypt">
-            <span class="icon"></span> <span data-i18n="reset">重置</span>
-          </button>
-        </div>
-      </div>
+        <!-- 卡片内容容器 -->
+        <div class="card-content-container">
+          <!-- 加密模块 -->
+          <div id="encryptCard">
+            <h2 class="card-title" data-i18n="fileEncryption">文件加密</h2>
+            <div class="form-group">
+              <label class="label" for="encryptFile" data-i18n="selectFileToEncrypt">选择需要加密的文件</label>
+              <input type="file" id="encryptFile" class="file-input" accept="*">
+            </div>
+            <div class="form-group">
+              <label class="label" for="encryptPwd" data-i18n="setEncryptionPassword">设置加密密码</label>
+              <input type="password" id="encryptPwd" class="input" placeholder="请输入至少4位以上密码"
+                data-i18n-placeholder="placeholderPassword">
+            </div>
+            <div class="progress-container">
+              <div class="progress" id="encryptProgress"></div>
+            </div>
+            <div class="status" id="encryptStatus"></div>
+            <div class="btn-group">
+              <button class="btn btn-primary" id="startEncrypt">
+                <span class="icon icon-primary"></span> <span data-i18n="startEncryption">开始加密</span>
+              </button>
+              <button class="btn" id="clearEncrypt">
+                <span class="icon"></span> <span data-i18n="reset">重置</span>
+              </button>
+            </div>
+          </div>
 
-      <!-- 解密模块 -->
-      <div id="decryptCard" class="hidden">
-        <h2 class="card-title" data-i18n="fileDecryption">文件解密</h2>
-        <div class="form-group">
-          <label class="label" for="decryptFile" data-i18n="selectEncryptedFile">选择加密文件（.venc）</label>
-          <input type="file" id="decryptFile" class="file-input" accept=".venc">
-        </div>
-        
-        <!-- 解密方式选项卡 -->
-        <div class="decrypt-options">
-          <button class="decrypt-option-btn active" id="vkeyOptionBtn" data-i18n="useRecoveryKey">使用恢复密钥</button>
-          <button class="decrypt-option-btn" id="passwordOptionBtn" data-i18n="usePassword">使用密码</button>
-        </div>
-        
-        <!-- 密钥文件选项内容 -->
-        <div class="option-content active" id="vkeyOptionContent">
-          <div class="form-group">
-            <label class="label" for="vkeyFile" data-i18n="selectKeyFile"></label>
-            <input type="file" id="vkeyFile" class="file-input" accept=".vkey">
+          <!-- 解密模块 -->
+          <div id="decryptCard" class="hidden">
+            <h2 class="card-title" data-i18n="fileDecryption">文件解密</h2>
+            <div class="form-group">
+              <label class="label" for="decryptFile" data-i18n="selectEncryptedFile">选择加密文件（.venc）</label>
+              <input type="file" id="decryptFile" class="file-input" accept=".venc">
+            </div>
+
+            <!-- 解密方式选项卡 -->
+            <div class="decrypt-options">
+              <button class="decrypt-option-btn active" id="vkeyOptionBtn" data-i18n="useRecoveryKey">使用恢复密钥</button>
+              <button class="decrypt-option-btn" id="passwordOptionBtn" data-i18n="usePassword">使用密码</button>
+            </div>
+
+            <!-- 密钥文件选项内容 -->
+            <div class="option-content active" id="vkeyOptionContent">
+              <div class="form-group">
+                <label class="label" for="vkeyFile" data-i18n="selectKeyFile"></label>
+                <input type="file" id="vkeyFile" class="file-input" accept=".vkey">
+              </div>
+            </div>
+
+            <!-- 密码选项内容 -->
+            <div class="option-content" id="passwordOptionContent">
+              <div class="form-group">
+                <label class="label" for="decryptPwd" data-i18n="enterDecryptionPassword">输入解密密码</label>
+                <input type="password" id="decryptPwd" class="input" placeholder="请输入加密时设置的密码"
+                  data-i18n-placeholder="placeholderDecryptPassword">
+              </div>
+            </div>
+
+            <div class="progress-container">
+              <div class="progress" id="decryptProgress"></div>
+            </div>
+            <div class="status" id="decryptStatus"></div>
+            <div class="btn-group">
+              <button class="btn btn-primary" id="startDecrypt">
+                <span class="icon icon-primary"></span> <span data-i18n="startDecryption">开始解密</span>
+              </button>
+              <button class="btn" id="clearDecrypt">
+                <span class="icon"></span> <span data-i18n="reset">重置</span>
+              </button>
+            </div>
           </div>
         </div>
-        
-        <!-- 密码选项内容 -->
-        <div class="option-content" id="passwordOptionContent">
-          <div class="form-group">
-            <label class="label" for="decryptPwd" data-i18n="enterDecryptionPassword">输入解密密码</label>
-            <input type="password" id="decryptPwd" class="input" placeholder="请输入加密时设置的密码" data-i18n-placeholder="placeholderDecryptPassword">
+      </div>
+
+      <script src="js/main.js" defer type="module"></script>
+
+      <!-- 底部页脚 -->
+      <footer class="footer">
+        <p></p>
+      </footer>
+      <script src="js/footer.js"></script>
+
+      <!-- 深色模式切换按钮 -->
+      <button id="themeToggle" class="theme-toggle"></button>
+
+      <!-- GitHub图标按钮 -->
+      <a id="githubLink" class="github-link" href="https://github.com/landeyucc/venc" target="_blank" title="GitHub"
+        rel="noopener noreferrer"></a>
+
+      <!-- 语言选择器 -->
+      <div id="languageSelector" class="language-selector"></div>
+
+      <!-- 配置弹窗 -->
+      <div id="configModal" class="config-modal">
+        <div class="config-modal-content">
+          <div class="config-modal-header">
+            <h2 class="config-modal-title" data-i18n="configModalTitle">设置</h2>
+            <button id="configModalClose" class="config-modal-close" aria-label="关闭">&times;</button>
+          </div>
+
+          <div class="config-section">
+            <h3 class="config-section-title" data-i18n="serverSettings">服务器设置</h3>
+            <input type="text" id="serverUrl" class="config-input" placeholder="https://example.com/api"
+              data-i18n-placeholder="serverUrl">
+            <input type="text" id="apiKey" class="config-input" placeholder="身份验证密钥" data-i18n-placeholder="apiKey">
+            <div class="test-connection-container">
+              <button id="testServerConnection" class="config-button test-connection-btn"
+                data-i18n="testConnection">立即测试</button>
+              <div id="testConnectionResult" class="test-connection-result"></div>
+            </div>
+          </div>
+
+          <div class="config-section">
+            <h3 class="config-section-title" data-i18n="encryptSettings">加密设置</h3>
+            <div class="config-option">
+              <label class="config-option-label" data-i18n="useRandomFilename">使用随机UUID文件名</label>
+              <label class="config-checkbox">
+                <input type="checkbox" id="useRandomFilename">
+                <span class="config-checkbox-slider"></span>
+              </label>
+            </div>
+            <div class="config-option">
+              <label class="config-option-label" data-i18n="sendFilename">发送原始文件名</label>
+              <label class="config-checkbox">
+                <input type="checkbox" id="encryptSendFilename">
+                <span class="config-checkbox-slider"></span>
+              </label>
+            </div>
+            <div class="config-option">
+              <label class="config-option-label" data-i18n="sendFileSize">发送文件大小</label>
+              <label class="config-checkbox">
+                <input type="checkbox" id="encryptSendFileSize">
+                <span class="config-checkbox-slider"></span>
+              </label>
+            </div>
+            <div class="config-option">
+              <label class="config-option-label" data-i18n="sendUUID">发送UUID</label>
+              <label class="config-checkbox">
+                <input type="checkbox" id="encryptSendUUID">
+                <span class="config-checkbox-slider"></span>
+              </label>
+            </div>
+            <div class="config-option">
+              <label class="config-option-label" data-i18n="sendPassword">发送密码</label>
+              <label class="config-checkbox">
+                <input type="checkbox" id="encryptSendPassword">
+                <span class="config-checkbox-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="config-section">
+            <h3 class="config-section-title" data-i18n="decryptSettings">解密设置</h3>
+            <div class="config-option">
+              <label class="config-option-label" data-i18n="sendFilename">发送原始文件名</label>
+              <label class="config-checkbox">
+                <input type="checkbox" id="decryptSendFilename">
+                <span class="config-checkbox-slider"></span>
+              </label>
+            </div>
+            <div class="config-option">
+              <label class="config-option-label" data-i18n="sendFileSize">发送文件大小</label>
+              <label class="config-checkbox">
+                <input type="checkbox" id="decryptSendFileSize">
+                <span class="config-checkbox-slider"></span>
+              </label>
+            </div>
+            <div class="config-option">
+              <label class="config-option-label" data-i18n="sendUUID">发送UUID</label>
+              <label class="config-checkbox">
+                <input type="checkbox" id="decryptSendUUID">
+                <span class="config-checkbox-slider"></span>
+              </label>
+            </div>
+            <div class="config-option">
+              <label class="config-option-label" data-i18n="sendPassword">发送密码</label>
+              <label class="config-checkbox">
+                <input type="checkbox" id="decryptSendPassword">
+                <span class="config-checkbox-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="config-modal-footer">
+            <button id="configModalCancel" class="config-modal-button secondary" data-i18n="configCancel">取消</button>
+            <button id="configModalSave" class="config-modal-button primary" data-i18n="configSave">保存</button>
           </div>
         </div>
-        
-        <div class="progress-container">
-          <div class="progress" id="decryptProgress"></div>
-        </div>
-        <div class="status" id="decryptStatus"></div>
-        <div class="btn-group">
-          <button class="btn btn-primary" id="startDecrypt">
-            <span class="icon icon-primary"></span> <span data-i18n="startDecryption">开始解密</span>
-          </button>
-          <button class="btn" id="clearDecrypt">
-            <span class="icon"></span> <span data-i18n="reset">重置</span>
-          </button>
-        </div>
       </div>
+
     </div>
   </div>
+</body>
 
-  <script src="js/main.js" defer type="module"></script>
-  
-  <!-- 底部页脚 -->
-  <footer class="footer">
-    <p></p>
-  </footer>
-  <script src="js/footer.js"></script>
-
-  <!-- 深色模式切换按钮 -->
-  <button id="themeToggle" class="theme-toggle"></button>
-  
-  <!-- GitHub图标按钮 -->
-  <a id="githubLink" class="github-link" href="https://github.com/landeyucc/venc" target="_blank" title="GitHub" rel="noopener noreferrer"></a>
-  
-  <!-- 语言选择器 -->
-  <div id="languageSelector" class="language-selector"></div>
-  
-  <!-- 配置弹窗 -->
-  <div id="configModal" class="config-modal">
-    <div class="config-modal-content">
-      <div class="config-modal-header">
-        <h2 class="config-modal-title" data-i18n="configModalTitle">设置</h2>
-        <button id="configModalClose" class="config-modal-close" aria-label="关闭">&times;</button>
-      </div>
-      
-      <div class="config-section">
-        <h3 class="config-section-title" data-i18n="serverSettings">服务器设置</h3>
-        <input type="text" id="serverUrl" class="config-input" placeholder="https://example.com/api" data-i18n-placeholder="serverUrl">
-        <input type="text" id="apiKey" class="config-input" placeholder="身份验证密钥" data-i18n-placeholder="apiKey">
-        <div class="test-connection-container">
-          <button id="testServerConnection" class="config-button test-connection-btn" data-i18n="testConnection">立即测试</button>
-          <div id="testConnectionResult" class="test-connection-result"></div>
-        </div>
-      </div>
-      
-      <div class="config-section">
-        <h3 class="config-section-title" data-i18n="encryptSettings">加密设置</h3>
-        <div class="config-option">
-          <label class="config-option-label" data-i18n="useRandomFilename">使用随机UUID文件名</label>
-          <label class="config-checkbox">
-            <input type="checkbox" id="useRandomFilename">
-            <span class="config-checkbox-slider"></span>
-          </label>
-        </div>
-        <div class="config-option">
-          <label class="config-option-label" data-i18n="sendFilename">发送原始文件名</label>
-          <label class="config-checkbox">
-            <input type="checkbox" id="encryptSendFilename">
-            <span class="config-checkbox-slider"></span>
-          </label>
-        </div>
-        <div class="config-option">
-          <label class="config-option-label" data-i18n="sendFileSize">发送文件大小</label>
-          <label class="config-checkbox">
-            <input type="checkbox" id="encryptSendFileSize">
-            <span class="config-checkbox-slider"></span>
-          </label>
-        </div>
-        <div class="config-option">
-          <label class="config-option-label" data-i18n="sendUUID">发送UUID</label>
-          <label class="config-checkbox">
-            <input type="checkbox" id="encryptSendUUID">
-            <span class="config-checkbox-slider"></span>
-          </label>
-        </div>
-        <div class="config-option">
-          <label class="config-option-label" data-i18n="sendPassword">发送密码</label>
-          <label class="config-checkbox">
-            <input type="checkbox" id="encryptSendPassword">
-            <span class="config-checkbox-slider"></span>
-          </label>
-        </div>
-      </div>
-      
-      <div class="config-section">
-        <h3 class="config-section-title" data-i18n="decryptSettings">解密设置</h3>
-        <div class="config-option">
-          <label class="config-option-label" data-i18n="sendFilename">发送原始文件名</label>
-          <label class="config-checkbox">
-            <input type="checkbox" id="decryptSendFilename">
-            <span class="config-checkbox-slider"></span>
-          </label>
-        </div>
-        <div class="config-option">
-          <label class="config-option-label" data-i18n="sendFileSize">发送文件大小</label>
-          <label class="config-checkbox">
-            <input type="checkbox" id="decryptSendFileSize">
-            <span class="config-checkbox-slider"></span>
-          </label>
-        </div>
-        <div class="config-option">
-          <label class="config-option-label" data-i18n="sendUUID">发送UUID</label>
-          <label class="config-checkbox">
-            <input type="checkbox" id="decryptSendUUID">
-            <span class="config-checkbox-slider"></span>
-          </label>
-        </div>
-        <div class="config-option">
-          <label class="config-option-label" data-i18n="sendPassword">发送密码</label>
-          <label class="config-checkbox">
-            <input type="checkbox" id="decryptSendPassword">
-            <span class="config-checkbox-slider"></span>
-          </label>
-        </div>
-      </div>
-      
-      <div class="config-modal-footer">
-        <button id="configModalCancel" class="config-modal-button secondary" data-i18n="configCancel">取消</button>
-        <button id="configModalSave" class="config-modal-button primary" data-i18n="configSave">保存</button>
-      </div>
-    </div>
-  </div>
-      
-        </div> 
-      </div> 
-    </body>
-    </html>
+</html>
