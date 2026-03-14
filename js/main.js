@@ -15,7 +15,7 @@ window.addEventListener("DOMContentLoaded", () => {
       // 更新文件选择状态显示
       const label = input.parentElement.querySelector('.label');
       if (input.files.length > 0) {
-        // 如果已选择文件，在label后显示文件名（如果有专门用于显示文件名的元素）
+        // 如果已选择文件，在label后显示文件名
         let fileNameDisplay = input.nextElementSibling;
         if (!fileNameDisplay || !fileNameDisplay.classList.contains('file-name-display')) {
           fileNameDisplay = document.createElement('div');
