@@ -1,1 +1,6 @@
 颜色设计.md
+/dec
+/node_modules
+/.vscode
+*.venc
+*.vkey
