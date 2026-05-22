@@ -55,14 +55,6 @@ window.addEventListener("DOMContentLoaded", () => {
   // 初始化配置弹窗
   initConfigModal();
   
-  // 桌面版按钮事件
-  const desktopVersionButton = document.getElementById('desktopVersionButton');
-  if (desktopVersionButton) {
-    desktopVersionButton.addEventListener('click', () => { 
-      window.open('https://venc.coldsea.vip/', '_blank', 'noopener,noreferrer');
-    });
-  }
-  
   // 为语言切换功能添加钩子，当语言切换时更新文件选择器文本
   const originalChangeLanguage = window.changeLanguage || changeLanguage;
   window.changeLanguage = function(langCode) {
