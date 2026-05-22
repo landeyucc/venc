@@ -96,7 +96,8 @@ export default {
   workerErrorUnknownOperation: 'Unknown operation type',
   
   // 配置相关
-  configuration: 'Configuration',
+  configuration: 'Logs & Config',
+  desktopVersion: 'Desktop Version',
   configModalTitle: 'Settings',
   configClose: 'Close',
   configSave: 'Save',
