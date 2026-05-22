@@ -122,5 +122,7 @@ export default {
   updateToLatestVersion: 'Updated to the latest version',
   noUpdateAvailable: 'Already the latest version',
   updateFailed: 'Update failed',
-  serviceWorkerNotSupported: 'Your browser does not support PWA update functionality'
+  serviceWorkerNotSupported: 'Your browser does not support PWA update functionality',
+  // Desktop version link
+  desktopVersion: 'Desktop Version'
 };

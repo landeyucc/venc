@@ -122,5 +122,7 @@ export default {
   updateToLatestVersion: '已更新至最新版本',
   noUpdateAvailable: '目前已是最新版本',
   updateFailed: '更新失败',
-  serviceWorkerNotSupported: '您的浏览器不支持PWA更新功能'
+  serviceWorkerNotSupported: '您的浏览器不支持PWA更新功能',
+  // 桌面版链接
+  desktopVersion: '桌面版'
 };
