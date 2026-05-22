@@ -96,7 +96,7 @@ export default {
   workerErrorUnknownOperation: '未知操作類型',
   
   // 配置相關
-  configuration: '配置',
+  configuration: '日誌與配置',
   configModalTitle: '設定',
   configClose: '關閉',
   configSave: '儲存',
