@@ -58,7 +58,7 @@ window.addEventListener("DOMContentLoaded", () => {
   // 桌面版按钮事件
   const desktopVersionButton = document.getElementById('desktopVersionButton');
   if (desktopVersionButton) {
-    desktopVersionButton.addEventListener('click', () => {
+    desktopVersionButton.addEventListener('click', () => { 
       window.open('https://venc.coldsea.vip/', '_blank', 'noopener,noreferrer');
     });
   }
