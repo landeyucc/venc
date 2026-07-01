@@ -124,5 +124,7 @@ export default {
   updateFailed: '更新失败',
   serviceWorkerNotSupported: '您的浏览器不支持PWA更新功能',
   // 桌面版链接
-  desktopVersion: '桌面版'
+  desktopVersion: 'Venc官网',
+  // 移动端选项
+  options: '选项'
 };

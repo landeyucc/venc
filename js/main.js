@@ -62,6 +62,86 @@ window.addEventListener("DOMContentLoaded", () => {
       window.open('https://venc.coldsea.vip/', '_blank', 'noopener noreferrer');
     });
   }
+
+  // 移动端选项菜单
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  const mobileOptionsModal = document.getElementById('mobileOptionsModal');
+  const mobileOptionsClose = document.getElementById('mobileOptionsClose');
+  const mobileDesktopLink = document.getElementById('mobileDesktopLink');
+  const mobileConfigBtn = document.getElementById('mobileConfigBtn');
+  const mobileLangOptions = document.querySelectorAll('.mobile-lang-option');
+
+  function openMobileOptions() {
+    if (mobileOptionsModal) {
+      mobileOptionsModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      // 更新语言选项的选中状态
+      updateMobileLangOptions();
+    }
+  }
+
+  function closeMobileOptions() {
+    if (mobileOptionsModal) {
+      mobileOptionsModal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  }
+
+  function updateMobileLangOptions() {
+    const currentLang = getCurrentLanguage();
+    mobileLangOptions.forEach(btn => {
+      if (btn.dataset.lang === currentLang) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+  }
+
+  if (mobileMenuBtn) {
+    mobileMenuBtn.addEventListener('click', openMobileOptions);
+  }
+
+  if (mobileOptionsClose) {
+    mobileOptionsClose.addEventListener('click', closeMobileOptions);
+  }
+
+  if (mobileOptionsModal) {
+    mobileOptionsModal.addEventListener('click', (e) => {
+      if (e.target === mobileOptionsModal) {
+        closeMobileOptions();
+      }
+    });
+  }
+
+  if (mobileDesktopLink) {
+    mobileDesktopLink.addEventListener('click', () => {
+      closeMobileOptions();
+      window.open('https://venc.coldsea.vip/', '_blank', 'noopener noreferrer');
+    });
+  }
+
+  if (mobileConfigBtn) {
+    mobileConfigBtn.addEventListener('click', () => {
+      closeMobileOptions();
+      // 打开配置弹窗
+      configButton.click();
+    });
+  }
+
+  mobileLangOptions.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const lang = btn.dataset.lang;
+      if (lang) {
+        changeLanguage(lang);
+        updateMobileLangOptions();
+        // 同时更新桌面版语言选择器
+        if (typeof window.updateLanguageSelector === 'function') {
+          window.updateLanguageSelector();
+        }
+      }
+    });
+  });
   
   // 为语言切换功能添加钩子，当语言切换时更新文件选择器文本
   const originalChangeLanguage = window.changeLanguage || changeLanguage;

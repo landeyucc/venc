@@ -4,6 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="keywords" content="VENC, 文件保护, 文件加密, 文件解密, 文件隐私保护">
+  <meta name="description" content="VENC文件保护工具，用于加密和解密文件，保护文件隐私，支持秘钥恢复，免去忘记密码无法解密文件的困扰。跨平台兼容支持多端程序，包括Windows、Android、WebWorker、其他语言cli等。">
   <title id="pageTitle" data-i18n="appTitle">VENC文件保护</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="shortcut icon" href="img/venc.ico" type="image/x-icon" sizes="48x48">
@@ -20,7 +22,7 @@
       </div>
       <h1 class="title" data-i18n="title">VENC</h1>
       <button id="configButton" class="config-button" data-i18n="configuration">配置</button>
-      <button id="desktopLink" class="config-button" data-i18n="desktopVersion">桌面版</button>
+      <button id="desktopLink" class="config-button" data-i18n="desktopVersion">桌面版下载</button>
     </div>
 
     <!-- 垂直分割线 -->
@@ -128,6 +130,36 @@
 
       <!-- 语言选择器 -->
       <div id="languageSelector" class="language-selector"></div>
+
+      <!-- 移动端选项菜单按钮 -->
+      <button id="mobileMenuBtn" class="mobile-menu-btn">
+        <i class="fas fa-ellipsis-v"></i>
+      </button>
+
+      <!-- 移动端选项模态框 -->
+      <div id="mobileOptionsModal" class="mobile-options-modal">
+        <div class="mobile-options-content">
+          <div class="mobile-options-header">
+            <h3 data-i18n="options">选项</h3>
+            <button id="mobileOptionsClose" class="mobile-options-close">&times;</button>
+          </div>
+          <div class="mobile-options-list">
+            <button id="mobileDesktopLink" class="mobile-option-item">
+              <i class="fas fa-desktop"></i>
+              <span data-i18n="desktopVersion">桌面版</span>
+            </button>
+            <button id="mobileConfigBtn" class="mobile-option-item">
+              <i class="fas fa-cog"></i>
+              <span data-i18n="configuration">配置</span>
+            </button>
+            <div class="mobile-option-divider"></div>
+            <div class="mobile-option-label" data-i18n="languageSelector">语言</div>
+            <button class="mobile-lang-option" data-lang="en-US">English</button>
+            <button class="mobile-lang-option" data-lang="zh-CN">简体中文</button>
+            <button class="mobile-lang-option" data-lang="zh-TW">繁體中文</button>
+          </div>
+        </div>
+      </div>
 
       <!-- 配置弹窗 -->
       <div id="configModal" class="config-modal">

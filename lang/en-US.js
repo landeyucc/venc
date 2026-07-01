@@ -124,5 +124,7 @@ export default {
   updateFailed: 'Update failed',
   serviceWorkerNotSupported: 'Your browser does not support PWA update functionality',
   // Desktop version link
-  desktopVersion: 'Desktop Version'
+  desktopVersion: 'Venc Website',
+  // Mobile options
+  options: 'Options'
 };
